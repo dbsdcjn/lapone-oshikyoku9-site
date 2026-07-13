@@ -6,5 +6,5 @@ import react from "@vitejs/plugin-react";
 // ユーザーページ（<username>.github.io というリポジトリ名）を使う場合だけ '/' のままでOK
 export default defineConfig({
   plugins: [react()],
-  base: "/lapone-oshikyoku9/",
+  base: "/lapone-oshikyoku9-site/",
 });
