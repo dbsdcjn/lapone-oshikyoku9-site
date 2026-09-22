@@ -4,3 +4,4 @@ dist
 *.local
 _to_delete
 vite.config.js.timestamp-*.mjs
+Claude outputs
