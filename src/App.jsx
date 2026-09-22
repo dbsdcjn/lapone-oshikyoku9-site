@@ -187,6 +187,23 @@ const SONGS = [
   { id: "s175", type: "PV", title: "16(Sixteen)", group: "JO1", videoId: "VQgPP1u_DME" },
   { id: "s176", type: "PV", title: "Shine A Light (TV size)", group: "JO1", videoId: "JdmgJBFEVQM" },
   { id: "s177", type: "PV", title: "Love seeker (Live Performance Video)", group: "JO1", videoId: "1zXZX9Hy6Vk" },
+  { id: "s178", type: "PV", title: "Tomorrow", group: "ME:I", videoId: "Vx5QxUE9rPQ" },
+  { id: "s179", type: "PV", title: "Ready Go", group: "ME:I", videoId: "VfWvzhxg2rc" },
+  { id: "s180", type: "PV", title: "Million Stars", group: "ME:I", videoId: "HawYUImKyos" },
+  { id: "s181", type: "PV", title: "Best Match", group: "ME:I", videoId: "D8nbLBOQxwg" },
+  { id: "s182", type: "PV", title: "FLUTE", group: "ME:I", videoId: "DE70uymOOw4" },
+  { id: "s183", type: "PV", title: "CONNECT (Performance Video)", group: "IS:SUE", videoId: "_BWsnNmEeqw" },
+  { id: "s184", type: "PV", title: "SHINING (Performance Video)", group: "IS:SUE", videoId: "21BDq4qKPzM" },
+  { id: "s185", type: "PV", title: "Phase (Performance Video)", group: "IS:SUE", videoId: "qfmiGiFKYOs" },
+  { id: "s186", type: "PV", title: "Quartet (Performance Video)", group: "IS:SUE", videoId: "YtMV1tJ8Nrs" },
+  { id: "s187", type: "PV", title: "No.4", group: "IS:SUE", videoId: "0sHasTeEVqM" },
+  { id: "s188", type: "MV", title: "KO1KEYZ", group: "KO1KEYZ", videoId: "Q8IpG07amxE" },
+  { id: "s189", type: "MV", title: "Wanna", group: "DXTEEN", videoId: "AM10oKeMTDk" },
+  { id: "s190", type: "PV", title: "Calendar", group: "DXTEEN", videoId: "aMNyLuzfTJk" },
+  { id: "s191", type: "PV", title: "Tick-Tack (Performance Video)", group: "DXTEEN", videoId: "fobz4GaVMoQ" },
+  { id: "s192", type: "PV", title: "両片想い (Performance Video)", group: "DXTEEN", videoId: "Tkg0SapdYK8" },
+  { id: "s193", type: "PV", title: "ハルコイ (Performance Video)", group: "DXTEEN", videoId: "A-k-10vrp2Y" },
+  { id: "s194", type: "PV", title: "IDOL", group: "DXTEEN", videoId: "KcrL7GdaScE" },
   // ここに続きを追加していく（KO1KEYZ も同じ形式でOK）
 ];
 
