@@ -242,6 +242,13 @@ function roundRectPath(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+function truncateToWidth(ctx, text, maxWidth) {
+  let t = text;
+  if (ctx.measureText(t).width <= maxWidth) return t;
+  while (t.length > 1 && ctx.measureText(t + "…").width > maxWidth) t = t.slice(0, -1);
+  return t + "…";
+}
+
 const GROUP_ORDER = ["JO1", "INI", "DXTEEN", "KO1KEYZ", "ME:I", "IS:SUE"];
 
 // 選べるのは公式MV/PVのみ。Performance Ver.やLive映像はデータとして残しつつピッカーからは除外。
@@ -307,6 +314,7 @@ export default function LaponeOshikyoku9Public() {
   const [toast, setToast] = useState("");
   const [exporting, setExporting] = useState(false);
   const [previewSong, setPreviewSong] = useState(null);
+  const [showCaptions, setShowCaptions] = useState(false);
 
   // 選んだ組み合わせを端末に自動保存。次に開いたときも続きから選べる。
   useEffect(() => {
@@ -379,7 +387,18 @@ export default function LaponeOshikyoku9Public() {
   const selectedCount = selectedIds.length;
   const canExport = selectedCount === 9 && !!centerId;
 
-  async function buildCanvas() {
+  async function buildCanvas(withCaptions) {
+    if (withCaptions) {
+      try {
+        await Promise.all([
+          document.fonts.load("bold 21px 'Zen Maru Gothic'"),
+          document.fonts.load("500 15px 'Zen Maru Gothic'"),
+        ]);
+      } catch (e) {
+        // フォント読み込みに失敗してもフォールバックフォントで書き出しを続ける
+      }
+    }
+
     const cellW = 380,
       cellH = Math.round((cellW * 9) / 16),
       gap = 0,
@@ -423,6 +442,21 @@ export default function LaponeOshikyoku9Public() {
           ctx.fillStyle = "#ffddb0";
           ctx.fillRect(x, y, cellW, cellH);
         }
+        if (withCaptions) {
+          const grad = ctx.createLinearGradient(0, y + cellH - 84, 0, y + cellH);
+          grad.addColorStop(0, "rgba(20,14,8,0)");
+          grad.addColorStop(1, "rgba(20,14,8,0.82)");
+          ctx.fillStyle = grad;
+          ctx.fillRect(x, y + cellH - 84, cellW, 84);
+
+          ctx.textAlign = "right";
+          ctx.fillStyle = "#ffffff";
+          ctx.font = "bold 21px 'Zen Maru Gothic', sans-serif";
+          ctx.fillText(truncateToWidth(ctx, song.title, cellW - 32), x + cellW - 16, y + cellH - 42);
+          ctx.font = "500 15px 'Zen Maru Gothic', sans-serif";
+          ctx.fillStyle = "#ffd7ae";
+          ctx.fillText(truncateToWidth(ctx, song.group, cellW - 32), x + cellW - 16, y + cellH - 16);
+        }
       } else {
         ctx.fillStyle = "#fdece0";
         ctx.fillRect(x, y, cellW, cellH);
@@ -453,7 +487,7 @@ export default function LaponeOshikyoku9Public() {
     if (!canExport || exporting) return;
     setExporting(true);
     try {
-      const canvas = await buildCanvas();
+      const canvas = await buildCanvas(showCaptions);
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
       if (!blob) {
         showToast("画像の書き出しに失敗したよ。スクリーンショットで保存してね");
@@ -485,7 +519,7 @@ export default function LaponeOshikyoku9Public() {
     if (!canExport || exporting) return;
     setExporting(true);
     try {
-      const canvas = await buildCanvas();
+      const canvas = await buildCanvas(showCaptions);
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
       if (blob) {
         const blobUrl = URL.createObjectURL(blob);
@@ -758,6 +792,15 @@ export default function LaponeOshikyoku9Public() {
                 <p style={{ color: "#a3907f", fontSize: 12 }} className="text-center" aria-live="polite">
                   {progressLabel}
                 </p>
+                <label className="flex items-center justify-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={showCaptions}
+                    onChange={(e) => setShowCaptions(e.target.checked)}
+                    style={{ width: 16, height: 16, accentColor: "#FF7A29" }}
+                  />
+                  <span style={{ color: "#a3907f", fontSize: 12 }}>曲名・グループ名を入れる</span>
+                </label>
                 <div className="flex gap-2">
                   <button
                     onClick={handleSaveOrShare}
