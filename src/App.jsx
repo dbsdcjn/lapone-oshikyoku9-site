@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Star, Download, RefreshCw, Check, Share2, Play, X, Link2, Twitter } from "lucide-react";
+import { Star, Download, RefreshCw, Check, Share2, Play, X, Link2 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // 曲データはここに書く（公開前に手元の準備ツールで取得した結果を貼ってね）
@@ -293,6 +293,14 @@ function readSavedSelection() {
   } catch (e) {
     return null;
   }
+}
+
+function XLogoIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
 }
 
 export default function LaponeOshikyoku9Public() {
@@ -699,8 +707,9 @@ export default function LaponeOshikyoku9Public() {
                           toggleSelect(song.id);
                         }
                       }}
-                      className="lo9-thumb relative rounded-xl overflow-hidden cursor-pointer aspect-video"
+                      className="lo9-thumb relative rounded-xl overflow-hidden cursor-pointer"
                       style={{
+                        paddingBottom: "56.25%",
                         border: isSelected ? "2px solid #FF7A29" : "1px solid #ffe4d1",
                       }}
                     >
@@ -709,7 +718,7 @@ export default function LaponeOshikyoku9Public() {
                         alt={song.title}
                         loading="lazy"
                         decoding="async"
-                        className="w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover"
                       />
                       <div
                         className="absolute bottom-0 left-0 right-0 p-1.5"
@@ -785,8 +794,9 @@ export default function LaponeOshikyoku9Public() {
                   return (
                     <div
                       key={i}
-                      className="relative aspect-video rounded-xl overflow-hidden"
+                      className="relative rounded-xl overflow-hidden"
                       style={{
+                        paddingBottom: "56.25%",
                         border: isCenter ? "3px solid #FF7A29" : "1px solid #ffe4d1",
                         boxShadow: isCenter
                           ? "0 0 0 6px rgba(255,122,41,0.14), 0 0 30px rgba(255,122,41,0.28)"
@@ -802,7 +812,7 @@ export default function LaponeOshikyoku9Public() {
                             alt={song.title}
                             loading="lazy"
                             decoding="async"
-                            className="w-full h-full object-cover"
+                            className="absolute inset-0 w-full h-full object-cover"
                           />
                           <div
                             className="absolute bottom-0 left-0 right-0 p-1.5 sm:p-2"
@@ -826,7 +836,7 @@ export default function LaponeOshikyoku9Public() {
                         </>
                       ) : (
                         <div
-                          className="w-full h-full flex items-center justify-center text-center"
+                          className="absolute inset-0 flex items-center justify-center text-center"
                           style={{ border: "1px dashed #ffd7ae", color: "#e3b088", fontSize: 11, background: "#fff8f2" }}
                         >
                           {isCenter ? "★ センター" : "空席"}
@@ -867,7 +877,7 @@ export default function LaponeOshikyoku9Public() {
                       cursor: canExport ? "pointer" : "not-allowed",
                     }}
                   >
-                    <Twitter size={16} />
+                    <XLogoIcon size={16} />
                   </button>
                   <button
                     onClick={copyShareLink}
@@ -922,7 +932,7 @@ export default function LaponeOshikyoku9Public() {
               color: canExport ? "#ffffff" : "#c9b6a6",
             }}
           >
-            <Twitter size={16} />
+            <XLogoIcon size={16} />
           </button>
         </div>
       )}
@@ -958,10 +968,9 @@ export default function LaponeOshikyoku9Public() {
                 <X size={22} />
               </button>
             </div>
-            <div className="rounded-xl overflow-hidden aspect-video" style={{ background: "#000" }}>
+            <div className="relative rounded-xl overflow-hidden" style={{ background: "#000", paddingBottom: "56.25%" }}>
               <iframe
-                width="100%"
-                height="100%"
+                className="absolute inset-0 w-full h-full"
                 src={`https://www.youtube.com/embed/${previewSong.videoId}?autoplay=1`}
                 title={previewSong.title}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
