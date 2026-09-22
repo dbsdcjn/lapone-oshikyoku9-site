@@ -197,7 +197,7 @@ const SONGS = [
   { id: "s185", type: "PV", title: "Phase (Performance Video)", group: "IS:SUE", videoId: "qfmiGiFKYOs" },
   { id: "s186", type: "PV", title: "Quartet (Performance Video)", group: "IS:SUE", videoId: "YtMV1tJ8Nrs" },
   { id: "s187", type: "PV", title: "No.4", group: "IS:SUE", videoId: "0sHasTeEVqM" },
-  { id: "s188", type: "MV", title: "KO1KEYZ", group: "KO1KEYZ", videoId: "Q8IpG07amxE" },
+  { id: "s188", type: "MV", title: "KO1KEYZ", group: "KO1KEYZ", videoId: "75MEFldsJKc" },
   { id: "s189", type: "MV", title: "Wanna", group: "DXTEEN", videoId: "AM10oKeMTDk" },
   { id: "s190", type: "PV", title: "Calendar", group: "DXTEEN", videoId: "aMNyLuzfTJk" },
   { id: "s191", type: "PV", title: "Tick-Tack (Performance Video)", group: "DXTEEN", videoId: "fobz4GaVMoQ" },
