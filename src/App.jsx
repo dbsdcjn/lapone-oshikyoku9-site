@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Star, Download, RefreshCw, Check, Share2, Play, X, Link2 } from "lucide-react";
+import { Star, Download, RefreshCw, Check, Share2, Play, X, Link2, Twitter } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // 曲データはここに書く（公開前に手元の準備ツールで取得した結果を貼ってね）
@@ -566,6 +566,35 @@ export default function LaponeOshikyoku9Public() {
     }
   }
 
+  async function shareToTwitter() {
+    if (!canExport || exporting) return;
+    setExporting(true);
+    try {
+      const canvas = await buildCanvas();
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+      if (blob) {
+        const blobUrl = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = blobUrl;
+        a.download = "lapone_oshikyoku9.png";
+        a.click();
+        window.setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+      }
+      const centerSong = SELECTABLE_SONGS.find((s) => s.id === centerId);
+      const centerTitle = centerSong ? centerSong.title.split("(")[0].trim() : "";
+      const centerLabel = centerSong ? `${centerSong.group}の${centerTitle}` : "";
+      const siteUrl = `${window.location.origin}${window.location.pathname}`;
+      const text = `私の好き曲No.1は${centerLabel}でした！\n${siteUrl}\n\n#LAPONE好き曲9選`;
+      const intentUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(text)}`;
+      window.open(intentUrl, "_blank", "noopener,noreferrer");
+      showToast("画像を保存したよ。投稿画面に添付してね！");
+    } catch (e) {
+      showToast("画像の書き出しに失敗したよ。スクリーンショットで保存してね");
+    } finally {
+      setExporting(false);
+    }
+  }
+
   const canShareFiles = typeof navigator !== "undefined" && !!navigator.share;
 
   const progressLabel =
@@ -827,6 +856,20 @@ export default function LaponeOshikyoku9Public() {
                     {exporting ? "書き出し中..." : canShareFiles ? "シェアする" : "画像を保存"}
                   </button>
                   <button
+                    onClick={shareToTwitter}
+                    disabled={!canExport || exporting}
+                    aria-label="Xでシェア"
+                    title="Xでシェア"
+                    className="rounded-lg px-3.5 flex items-center justify-center"
+                    style={{
+                      background: canExport ? "#000000" : "#f5e9de",
+                      color: canExport ? "#ffffff" : "#c9b6a6",
+                      cursor: canExport ? "pointer" : "not-allowed",
+                    }}
+                  >
+                    <Twitter size={16} />
+                  </button>
+                  <button
                     onClick={copyShareLink}
                     disabled={!canExport}
                     aria-label="この組み合わせの共有リンクをコピー"
@@ -868,6 +911,18 @@ export default function LaponeOshikyoku9Public() {
             }}
           >
             {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
+          </button>
+          <button
+            onClick={shareToTwitter}
+            disabled={!canExport || exporting}
+            aria-label="Xでシェア"
+            className="font-bold rounded-lg py-2 px-3 text-sm flex items-center justify-center shrink-0"
+            style={{
+              background: canExport ? "#000000" : "#f5e9de",
+              color: canExport ? "#ffffff" : "#c9b6a6",
+            }}
+          >
+            <Twitter size={16} />
           </button>
         </div>
       )}
