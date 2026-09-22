@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Star, Download, RefreshCw, Check, Share2, Play, X } from "lucide-react";
+import { Download, RefreshCw, Play, X } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // 曲データはここに書く（公開前に手元の準備ツールで取得した結果を貼ってね）
@@ -212,6 +212,10 @@ const FONT_STACK =
 
 const STORAGE_KEY = "lapone-oshikyoku9:selection";
 
+// 集計送信先（Google Apps Script Webアプリの/execURL）。
+// 未設定の間は何も送信しない。
+const RANKING_LOG_URL = "";
+
 function loadImage(src, crossOrigin) {
   return new Promise((resolve, reject) => {
     const img = new window.Image();
@@ -254,19 +258,22 @@ const GROUP_ORDER = ["JO1", "INI", "DXTEEN", "KO1KEYZ", "ME:I", "IS:SUE"];
 // 選べるのは公式MV/PVのみ。Performance Ver.やLive映像はデータとして残しつつピッカーからは除外。
 const SELECTABLE_SONGS = SONGS.filter((s) => s.type !== "LIVE");
 
+// 3x3のビジュアル配置(0〜8, 中央=4が1位/センター)と、
+// 順位配列(rankedIds、0番目が1位)のどのインデックスに対応するかのマッピング。
+const SLOT_ORDER = [0, 1, 2, 3, 5, 6, 7, 8];
+function rankIndexForPosition(pos) {
+  return pos === 4 ? 0 : SLOT_ORDER.indexOf(pos) + 1;
+}
+
 function readShareFromLocation() {
   try {
     const params = new URLSearchParams(window.location.search);
     const set = params.get("set");
     if (!set) return null;
-    const center = params.get("center");
     const ids = set.split(",").filter(Boolean);
     const validIds = ids.filter((id) => SELECTABLE_SONGS.some((s) => s.id === id)).slice(0, 9);
     if (validIds.length === 0) return null;
-    return {
-      selectedIds: validIds,
-      centerId: center && validIds.includes(center) ? center : null,
-    };
+    return { rankedIds: validIds };
   } catch (e) {
     return null;
   }
@@ -277,14 +284,29 @@ function readSavedSelection() {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
-    if (!parsed || !Array.isArray(parsed.selectedIds)) return null;
-    const validIds = parsed.selectedIds.filter((id) => SELECTABLE_SONGS.some((s) => s.id === id)).slice(0, 9);
-    return {
-      selectedIds: validIds,
-      centerId: parsed.centerId && validIds.includes(parsed.centerId) ? parsed.centerId : null,
-    };
+    if (!parsed || !Array.isArray(parsed.rankedIds)) return null;
+    const validIds = parsed.rankedIds.filter((id) => SELECTABLE_SONGS.some((s) => s.id === id)).slice(0, 9);
+    return { rankedIds: validIds };
   } catch (e) {
     return null;
+  }
+}
+
+// 集計用ログ送信(Google Apps Script Webアプリへ)。失敗しても無視してよい。
+function logRanking(rankedIds) {
+  if (!RANKING_LOG_URL) return;
+  try {
+    const labels = rankedIds.map((id) => {
+      const s = SELECTABLE_SONGS.find((x) => x.id === id);
+      return s ? `${s.group}/${s.title}` : id;
+    });
+    const payload = JSON.stringify({
+      center: labels[0] || "",
+      ranking: labels,
+    });
+    fetch(RANKING_LOG_URL, { method: "POST", mode: "no-cors", body: payload });
+  } catch (e) {
+    // 集計送信の失敗はユーザー体験に影響させない
   }
 }
 
@@ -295,27 +317,27 @@ export default function LaponeOshikyoku9Public() {
   }, []);
 
   const initialSelection = useMemo(() => {
-    return (
-      readShareFromLocation() || readSavedSelection() || { selectedIds: [], centerId: null }
-    );
+    return readShareFromLocation() || readSavedSelection() || { rankedIds: [] };
   }, []);
 
   const [activeGroup, setActiveGroup] = useState("すべて");
-  const [selectedIds, setSelectedIds] = useState(initialSelection.selectedIds);
-  const [centerId, setCenterId] = useState(initialSelection.centerId);
+  const [rankedIds, setRankedIds] = useState(initialSelection.rankedIds);
   const [toast, setToast] = useState("");
   const [exporting, setExporting] = useState(false);
   const [previewSong, setPreviewSong] = useState(null);
   const [showCaptions, setShowCaptions] = useState(false);
+  const [dragPos, setDragPos] = useState(null);
+  const [overPos, setOverPos] = useState(null);
+  const [loggedKey, setLoggedKey] = useState("");
 
   // 選んだ組み合わせを端末に自動保存。次に開いたときも続きから選べる。
   useEffect(() => {
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ selectedIds, centerId }));
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ rankedIds }));
     } catch (e) {
       // localStorageが使えない環境（プライベートブラウズ等）ではスキップ
     }
-  }, [selectedIds, centerId]);
+  }, [rankedIds]);
 
   // プレビューモーダルはEscキーでも閉じられるように
   useEffect(() => {
@@ -339,9 +361,8 @@ export default function LaponeOshikyoku9Public() {
       : SELECTABLE_SONGS.filter((s) => s.group === activeGroup);
 
   function toggleSelect(id) {
-    setSelectedIds((prev) => {
+    setRankedIds((prev) => {
       if (prev.includes(id)) {
-        if (centerId === id) setCenterId(null);
         return prev.filter((x) => x !== id);
       }
       if (prev.length >= 9) {
@@ -352,10 +373,15 @@ export default function LaponeOshikyoku9Public() {
     });
   }
 
-  function toggleCenter(id, e) {
-    e.stopPropagation();
-    if (!selectedIds.includes(id)) return;
-    setCenterId((prev) => (prev === id ? null : id));
+  function swapRanks(posA, posB) {
+    const rankA = rankIndexForPosition(posA);
+    const rankB = rankIndexForPosition(posB);
+    setRankedIds((prev) => {
+      if (rankA >= prev.length || rankB >= prev.length) return prev;
+      const next = [...prev];
+      [next[rankA], next[rankB]] = [next[rankB], next[rankA]];
+      return next;
+    });
   }
 
   function openPreview(song, e) {
@@ -364,20 +390,27 @@ export default function LaponeOshikyoku9Public() {
   }
 
   function resetSelection() {
-    setSelectedIds([]);
-    setCenterId(null);
+    setRankedIds([]);
   }
 
-  const slotOrder = [0, 1, 2, 3, 5, 6, 7, 8];
-  const outer = selectedIds.filter((id) => id !== centerId);
   const slots = Array(9).fill(null);
-  if (centerId) slots[4] = SELECTABLE_SONGS.find((s) => s.id === centerId) || null;
-  outer.forEach((id, i) => {
-    if (i < slotOrder.length) slots[slotOrder[i]] = SELECTABLE_SONGS.find((s) => s.id === id) || null;
-  });
+  for (let pos = 0; pos < 9; pos++) {
+    const id = rankedIds[rankIndexForPosition(pos)];
+    slots[pos] = id ? SELECTABLE_SONGS.find((s) => s.id === id) || null : null;
+  }
 
-  const selectedCount = selectedIds.length;
-  const canExport = selectedCount === 9 && !!centerId;
+  const selectedCount = rankedIds.length;
+  const canExport = selectedCount === 9;
+
+  // 9曲そろって書き出した組み合わせは、集計のため一度だけ裏で記録する
+  useEffect(() => {
+    if (!canExport) return;
+    const key = rankedIds.join(",");
+    if (key === loggedKey) return;
+    setLoggedKey(key);
+    logRanking(rankedIds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canExport, rankedIds]);
 
   async function buildCanvas(withCaptions) {
     if (withCaptions) {
@@ -458,7 +491,7 @@ export default function LaponeOshikyoku9Public() {
 
     // センターのオレンジ枠は全セルを描き終えた後に最前面へ描く
     // (gapが0なので、ループ内で描くと後から描かれる隣のセルに隠れてしまう)
-    if (centerId) {
+    if (rankedIds[0]) {
       const ccx = 1 * (cellW + gap);
       const ccy = 1 * (cellH + gap);
 
@@ -486,7 +519,7 @@ export default function LaponeOshikyoku9Public() {
         return;
       }
       const file = new File([blob], "lapone_oshikyoku9.png", { type: "image/png" });
-      const centerSong = SELECTABLE_SONGS.find((s) => s.id === centerId);
+      const centerSong = SELECTABLE_SONGS.find((s) => s.id === rankedIds[0]);
       const centerTitle = centerSong ? centerSong.title.split("(")[0].trim() : "";
       const centerLabel = centerSong ? `${centerSong.group}の${centerTitle}` : "";
       const siteUrl = `${window.location.origin}${window.location.pathname}`;
@@ -541,11 +574,9 @@ export default function LaponeOshikyoku9Public() {
   const progressLabel =
     selectedCount < 9
       ? `あと${9 - selectedCount}曲えらんでね`
-      : !centerId
-      ? "★でセンターを指名してね"
       : canShareFiles
-      ? "準備OK。シェアできるよ"
-      : "準備OK。画像を保存できるよ";
+      ? "準備OK。シェアできるよ（ドラッグで順位を入れ替えられるよ）"
+      : "準備OK。画像を保存できるよ（ドラッグで順位を入れ替えられるよ）";
 
   return (
     <div
@@ -565,6 +596,7 @@ export default function LaponeOshikyoku9Public() {
         .lo9-thumb { transition: transform .15s ease, box-shadow .15s ease; }
         .lo9-thumb:hover, .lo9-thumb:focus-visible { transform: scale(1.03); box-shadow: 0 6px 18px rgba(255,122,41,0.22); z-index: 1; }
         .lo9-thumb:focus-visible { outline: 2px solid #FF7A29; outline-offset: 2px; }
+        .lo9-slot { transition: transform .12s ease, opacity .12s ease, box-shadow .12s ease; }
         button:focus-visible { outline: 2px solid #FF7A29; outline-offset: 2px; }
         @keyframes lo9-fade-in { from { opacity: 0; } to { opacity: 1; } }
         .lo9-modal-backdrop { animation: lo9-fade-in .15s ease; }
@@ -623,8 +655,8 @@ export default function LaponeOshikyoku9Public() {
                 className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[32rem] overflow-y-auto pr-1 lo9-scroll"
               >
                 {visibleSongs.map((song) => {
-                  const isSelected = selectedIds.includes(song.id);
-                  const isCenter = centerId === song.id;
+                  const rankIndex = rankedIds.indexOf(song.id);
+                  const isSelected = rankIndex !== -1;
                   return (
                     <div
                       key={song.id}
@@ -666,23 +698,12 @@ export default function LaponeOshikyoku9Public() {
                       </div>
                       {isSelected && (
                         <div
-                          className="absolute top-1.5 right-1.5 rounded-full w-6 h-6 flex items-center justify-center"
+                          className="absolute top-1.5 right-1.5 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold"
                           style={{ background: "#FF7A29", color: "#ffffff" }}
                         >
-                          <Check size={13} />
+                          {rankIndex + 1}
                         </div>
                       )}
-                      <button
-                        onClick={(e) => toggleCenter(song.id, e)}
-                        disabled={!isSelected}
-                        aria-label={isCenter ? "センター指名を解除" : "センターに指名する"}
-                        aria-pressed={isCenter}
-                        className="absolute top-1.5 left-1.5 rounded-full w-6 h-6 flex items-center justify-center disabled:opacity-0"
-                        style={{ background: isCenter ? "#FF7A29" : "rgba(20,14,8,0.45)", color: "#ffffff" }}
-                        title="センターにする"
-                      >
-                        <Star size={13} fill={isCenter ? "currentColor" : "none"} />
-                      </button>
                       <button
                         onClick={(e) => openPreview(song, e)}
                         aria-label={`${song.title}のMVをプレビュー再生`}
@@ -724,18 +745,52 @@ export default function LaponeOshikyoku9Public() {
               <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 {slots.map((song, i) => {
                   const isCenter = i === 4;
+                  const rank = rankIndexForPosition(i) + 1;
+                  const isDragging = dragPos === i;
+                  const isOver = overPos === i && dragPos !== null && dragPos !== i;
                   return (
                     <div
                       key={i}
-                      className="relative rounded-xl overflow-hidden"
+                      data-pos={i}
+                      onPointerDown={(e) => {
+                        if (!song) return;
+                        e.currentTarget.setPointerCapture(e.pointerId);
+                        setDragPos(i);
+                      }}
+                      onPointerMove={(e) => {
+                        if (dragPos === null) return;
+                        const el = document.elementFromPoint(e.clientX, e.clientY);
+                        const cell = el && el.closest("[data-pos]");
+                        const pos = cell ? Number(cell.getAttribute("data-pos")) : null;
+                        setOverPos(pos);
+                      }}
+                      onPointerUp={() => {
+                        if (dragPos !== null && overPos !== null && overPos !== dragPos) {
+                          swapRanks(dragPos, overPos);
+                        }
+                        setDragPos(null);
+                        setOverPos(null);
+                      }}
+                      onPointerCancel={() => {
+                        setDragPos(null);
+                        setOverPos(null);
+                      }}
+                      className="lo9-slot relative rounded-xl overflow-hidden"
                       style={{
                         paddingBottom: "56.25%",
-                        border: isCenter ? "3px solid #FF7A29" : "1px solid #ffe4d1",
+                        border: isOver
+                          ? "3px dashed #FF7A29"
+                          : isCenter
+                          ? "3px solid #FF7A29"
+                          : "1px solid #ffe4d1",
                         boxShadow: isCenter
                           ? "0 0 0 6px rgba(255,122,41,0.14), 0 0 30px rgba(255,122,41,0.28)"
                           : "none",
-                        transform: isCenter ? "scale(1.04)" : "none",
+                        transform: isDragging ? "scale(0.95)" : isCenter ? "scale(1.04)" : "none",
+                        opacity: isDragging ? 0.5 : 1,
                         zIndex: isCenter ? 1 : 0,
+                        cursor: song ? "grab" : "default",
+                        touchAction: song ? "none" : "auto",
                       }}
                     >
                       {song ? (
@@ -745,6 +800,7 @@ export default function LaponeOshikyoku9Public() {
                             alt={song.title}
                             loading="lazy"
                             decoding="async"
+                            draggable={false}
                             className="absolute inset-0 w-full h-full object-cover"
                           />
                           <div
@@ -758,21 +814,19 @@ export default function LaponeOshikyoku9Public() {
                               {song.group}
                             </p>
                           </div>
-                          {isCenter && (
-                            <div
-                              className="absolute top-1.5 left-1.5 rounded-full w-6 h-6 flex items-center justify-center"
-                              style={{ background: "#FF7A29", color: "#ffffff" }}
-                            >
-                              <Star size={12} fill="currentColor" />
-                            </div>
-                          )}
+                          <div
+                            className="absolute top-1.5 left-1.5 rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold"
+                            style={{ background: isCenter ? "#FF7A29" : "rgba(20,14,8,0.55)", color: "#ffffff" }}
+                          >
+                            {rank}
+                          </div>
                         </>
                       ) : (
                         <div
                           className="absolute inset-0 flex items-center justify-center text-center"
                           style={{ border: "1px dashed #ffd7ae", color: "#e3b088", fontSize: 11, background: "#fff8f2" }}
                         >
-                          {isCenter ? "★ センター" : "空席"}
+                          {isCenter ? "1位" : `${rank}位`}
                         </div>
                       )}
                     </div>
