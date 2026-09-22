@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { Star, Download, RefreshCw, Check, Share2 } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Star, Download, RefreshCw, Check, Share2, Play, X, Link2 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // 曲データはここに書く（公開前に手元の準備ツールで取得した結果を貼ってね）
@@ -91,8 +91,70 @@ const SONGS = [
   { id: "s79", title: "Quartet (1ST TOUR FINAL Live)", group: "IS:SUE", videoId: "1u-Qz9z4R84" },
   { id: "s80", title: "Super Luna (1ST TOUR Live)", group: "IS:SUE", videoId: "rYIwTVwNwwc" },
   { id: "s81", title: "NO Game Over (ROCK IN JAPAN 2025 Live)", group: "IS:SUE", videoId: "pYz5Zyjl-Ak" },
+  { id: "s82", title: "無限大(INFINITY) (Performance Ver.)", group: "JO1", videoId: "4J6YxGAAido" },
+  { id: "s83", title: "La Pa Pa Pam (Performance Ver.)", group: "JO1", videoId: "xexjuif_nWk" },
+  { id: "s84", title: "OH-EH-OH (Performance Ver.)", group: "JO1", videoId: "Mqi1_EqY6hE" },
+  { id: "s85", title: "Shine A Light (Performance Ver.)", group: "JO1", videoId: "ibjLhgmHjM4" },
+  { id: "s86", title: "Born To Be Wild (Performance Ver.)", group: "JO1", videoId: "VNQcT9sZL8k" },
+  { id: "s87", title: "Design (Performance Ver.)", group: "JO1", videoId: "d_S9B55H5u4" },
+  { id: "s88", title: "REAL (Performance Ver.)", group: "JO1", videoId: "u-HL6kaobaM" },
+  { id: "s89", title: "Run&Go (Dance Performance Ver.)", group: "JO1", videoId: "vyWqlXAu5RY" },
+  { id: "s90", title: "僕らの季節 (Performance Ver.)", group: "JO1", videoId: "nIMqvGQtJHU" },
+  { id: "s91", title: "With Us (Performance Ver.)", group: "JO1", videoId: "HmopcEXjYUc" },
+  { id: "s92", title: "SuperCali (Performance Ver.)", group: "JO1", videoId: "m28FSsyWXBw" },
+  { id: "s93", title: "Tiger (Performance Ver.)", group: "JO1", videoId: "sEvOgbdsCmo" },
+  { id: "s94", title: "Test Drive (Performance Ver.)", group: "JO1", videoId: "erYO3TOX5jU" },
+  { id: "s95", title: "HAPPY UNBIRTHDAY (Performance Ver.)", group: "JO1", videoId: "z-8I2Nw9eN4" },
+  { id: "s96", title: "Handz In My Pocket (Performance Ver.)", group: "JO1", videoId: "tS-3R9aab2I" },
+  { id: "s97", title: "With Us (KIZUNA 2022 Live)", group: "JO1", videoId: "akkKeR0CYUk" },
+  { id: "s98", title: "Born To Be Wild (BEYOND THE DARK 2023 Osaka Live)", group: "JO1", videoId: "uwtO-d4Vn_A" },
+  { id: "s99", title: "Trigger (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "Jxt2mbXmnKY" },
+  { id: "s100", title: "NEWSmile (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "XTMxwWkza4o" },
+  { id: "s101", title: "Fairytale (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "WNcJg5nX-s4" },
+  { id: "s102", title: "EIEN (JO1DER SHOW 2026 Tokyo Dome Live)", group: "JO1", videoId: "yZbBQF6CEs0" },
+  { id: "s103", title: "Rocketeer (Performance Ver.)", group: "INI", videoId: "gPPN33XFuXI" },
+  { id: "s104", title: "Brighter (Performance Ver.)", group: "INI", videoId: "Z33NO8UFtx8" },
+  { id: "s105", title: "CALL 119 (Performance Ver.)", group: "INI", videoId: "-NdXsvCSBlI" },
+  { id: "s106", title: "We Are (Performance Ver.)", group: "INI", videoId: "8I87RI7Uv7E" },
+  { id: "s107", title: "Password (Performance Ver.)", group: "INI", videoId: "HBMyXVZ5cO8" },
+  { id: "s108", title: "SPECTRA (Performance Ver.)", group: "INI", videoId: "U8TRJyhUgyg" },
+  { id: "s109", title: "New Day (Performance Ver.)", group: "INI", videoId: "HUT81VaUeyY" },
+  { id: "s110", title: "FANFARE (Performance Ver.)", group: "INI", videoId: "AUoh8C__VsA" },
+  { id: "s111", title: "LEGIT (Performance Ver.)", group: "INI", videoId: "k4syFgku51o" },
+  { id: "s112", title: "LOUD (Performance Ver.)", group: "INI", videoId: "qFYNz588Eoc" },
+  { id: "s113", title: "All 4 U (Performance Ver.)", group: "INI", videoId: "VZxF_PX01Sk" },
+  { id: "s114", title: "Rocketeer (BREAK THE CODE 2022 Live)", group: "INI", videoId: "WX6ml-ncKSs" },
+  { id: "s115", title: "BOMBARDA (BREAK THE CODE 2022 Live)", group: "INI", videoId: "degadFGDbFw" },
+  { id: "s116", title: "Dramatic (BREAK THE CODE 2022 Live)", group: "INI", videoId: "DHUvG3iWzxg" },
+  { id: "s117", title: "CALL 119 (BREAK THE CODE 2022 Live)", group: "INI", videoId: "HGTvpiZy7c8" },
+  { id: "s118", title: "LEGIT (READY TO POP! 2023 Live)", group: "INI", videoId: "qMEQ5wi09h8" },
+  { id: "s119", title: "10 THINGS (Christmas Costume ver. Live)", group: "INI", videoId: "LE6TpU3aJh8" },
+  { id: "s120", title: "Rocketeer (FLIP THE CIRCLE 2024 Live)", group: "INI", videoId: "i1ZnwsFKLP0" },
+  { id: "s121", title: "Brighter (XQUARE ver. 2025 Live)", group: "INI", videoId: "n2cM6H94NL8" },
+  { id: "s122", title: "Brand New Day (Performance Ver.)", group: "DXTEEN", videoId: "GNen6VglFZo" },
+  { id: "s123", title: "Come Over (Performance Ver.)", group: "DXTEEN", videoId: "8RcM4Kyj29M" },
+  { id: "s124", title: "First Flight (Performance Ver.)", group: "DXTEEN", videoId: "PuI_6tQQffQ" },
+  { id: "s125", title: "Dive (Performance Ver.)", group: "DXTEEN", videoId: "4qVD_8nnVvY" },
+  { id: "s126", title: "Snowin' (Performance Ver.)", group: "DXTEEN", videoId: "UE7KjEww7q0" },
+  { id: "s127", title: "Our Sky (Performance Ver.)", group: "DXTEEN", videoId: "6rSK3T1WNIw" },
+  { id: "s128", title: "JOY (Heart & Soul 2026 Live)", group: "DXTEEN", videoId: "nC_yW6pL8OI" },
+  { id: "s129", title: "両片想い (Survive FES Stage CAM)", group: "DXTEEN", videoId: "psI02EKIjDU" },
+  { id: "s130", title: "Update ME (Performance Ver.)", group: "ME:I", videoId: "4Q3OSgceGvQ" },
+  { id: "s131", title: "Royal Energy (Extended Ver., Arena Live Tour Encore Tokyo)", group: "ME:I", videoId: "lCX9yMlAHdQ" },
+  { id: "s132", title: "TOXIC (ME:I Ver., Rock In Japan 2024)", group: "ME:I", videoId: "JZEGUVfqoOY" },
+  { id: "s133", title: "想像以上 (ME:I Ver., Countdown Japan 24/25)", group: "ME:I", videoId: "F5ftxL33Q8c" },
+  { id: "s134", title: "THIS IS ME:I (Arena Live Tour Hiroshima Live)", group: "ME:I", videoId: "qFYVBoN5t70" },
+  { id: "s135", title: "Fan Letter (Track Video)", group: "ME:I", videoId: "DUpjiiZTEek" },
+  { id: "s136", title: "CONNECT (Survive FES Live)", group: "IS:SUE", videoId: "WPj74vUGC8I" },
+  { id: "s137", title: "come again (Original by m-flo, REBORN Collection 2026 Live)", group: "IS:SUE", videoId: "IdqLY4vu7xM" },
+  { id: "s138", title: "THE FLASH GIRL (LAPOSTA 2025 Tokyo Dome Live)", group: "IS:SUE", videoId: "uwIG7AveXNI" },
   // ここに続きを追加していく（KO1KEYZ も同じ形式でOK）
 ];
+
+const FONT_STACK =
+  "'Zen Maru Gothic', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif";
+
+const STORAGE_KEY = "lapone-oshikyoku9:selection";
 
 function loadImage(src, crossOrigin) {
   return new Promise((resolve, reject) => {
@@ -117,21 +179,90 @@ function roundRectPath(ctx, x, y, w, h, r) {
 function truncateToWidth(ctx, text, maxWidth) {
   let t = text;
   if (ctx.measureText(t).width <= maxWidth) return t;
-  while (t.length > 1 && ctx.measureText(t + "\u2026").width > maxWidth) t = t.slice(0, -1);
-  return t + "\u2026";
+  while (t.length > 1 && ctx.measureText(t + "…").width > maxWidth) t = t.slice(0, -1);
+  return t + "…";
+}
+
+const GROUP_ORDER = ["JO1", "INI", "DXTEEN", "KO1KEYZ", "ME:I", "IS:SUE"];
+
+function encodeShareQuery(selectedIds, centerId) {
+  const params = new URLSearchParams();
+  params.set("set", selectedIds.join(","));
+  if (centerId) params.set("center", centerId);
+  return params.toString();
+}
+
+function readShareFromLocation() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const set = params.get("set");
+    if (!set) return null;
+    const center = params.get("center");
+    const ids = set.split(",").filter(Boolean);
+    const validIds = ids.filter((id) => SONGS.some((s) => s.id === id)).slice(0, 9);
+    if (validIds.length === 0) return null;
+    return {
+      selectedIds: validIds,
+      centerId: center && validIds.includes(center) ? center : null,
+    };
+  } catch (e) {
+    return null;
+  }
+}
+
+function readSavedSelection() {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.selectedIds)) return null;
+    const validIds = parsed.selectedIds.filter((id) => SONGS.some((s) => s.id === id)).slice(0, 9);
+    return {
+      selectedIds: validIds,
+      centerId: parsed.centerId && validIds.includes(parsed.centerId) ? parsed.centerId : null,
+    };
+  } catch (e) {
+    return null;
+  }
 }
 
 export default function LaponeOshikyoku9Public() {
   const groups = useMemo(() => {
-    const set = new Set(SONGS.map((s) => s.group));
-    return ["すべて", ...Array.from(set)];
+    const present = new Set(SONGS.map((s) => s.group));
+    return ["すべて", ...GROUP_ORDER.filter((g) => present.has(g))];
+  }, []);
+
+  const initialSelection = useMemo(() => {
+    return (
+      readShareFromLocation() || readSavedSelection() || { selectedIds: [], centerId: null }
+    );
   }, []);
 
   const [activeGroup, setActiveGroup] = useState("すべて");
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [centerId, setCenterId] = useState(null);
+  const [selectedIds, setSelectedIds] = useState(initialSelection.selectedIds);
+  const [centerId, setCenterId] = useState(initialSelection.centerId);
   const [toast, setToast] = useState("");
   const [exporting, setExporting] = useState(false);
+  const [previewSong, setPreviewSong] = useState(null);
+
+  // 選んだ組み合わせを端末に自動保存。次に開いたときも続きから選べる。
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ selectedIds, centerId }));
+    } catch (e) {
+      // localStorageが使えない環境（プライベートブラウズ等）ではスキップ
+    }
+  }, [selectedIds, centerId]);
+
+  // プレビューモーダルはEscキーでも閉じられるように
+  useEffect(() => {
+    if (!previewSong) return;
+    function onKeyDown(e) {
+      if (e.key === "Escape") setPreviewSong(null);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [previewSong]);
 
   function showToast(msg) {
     setToast(msg);
@@ -139,7 +270,10 @@ export default function LaponeOshikyoku9Public() {
     showToast._t = window.setTimeout(() => setToast(""), 2200);
   }
 
-  const visibleSongs = activeGroup === "すべて" ? SONGS : SONGS.filter((s) => s.group === activeGroup);
+  const visibleSongs =
+    activeGroup === "すべて"
+      ? [...SONGS].sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group))
+      : SONGS.filter((s) => s.group === activeGroup);
 
   function toggleSelect(id) {
     setSelectedIds((prev) => {
@@ -161,6 +295,11 @@ export default function LaponeOshikyoku9Public() {
     setCenterId((prev) => (prev === id ? null : id));
   }
 
+  function openPreview(song, e) {
+    e.stopPropagation();
+    setPreviewSong(song);
+  }
+
   function resetSelection() {
     setSelectedIds([]);
     setCenterId(null);
@@ -178,6 +317,17 @@ export default function LaponeOshikyoku9Public() {
   const canExport = selectedCount === 9 && !!centerId;
 
   async function buildCanvas() {
+    try {
+      await Promise.all([
+        document.fonts.load("900 46px 'Zen Maru Gothic'"),
+        document.fonts.load("500 20px 'Zen Maru Gothic'"),
+        document.fonts.load("bold 21px 'Zen Maru Gothic'"),
+        document.fonts.load("500 15px 'Zen Maru Gothic'"),
+      ]);
+    } catch (e) {
+      // フォント読み込みに失敗してもフォールバックフォントで書き出しを続ける
+    }
+
     const cellW = 380,
       cellH = Math.round((cellW * 9) / 16),
       gap = 20,
@@ -205,9 +355,9 @@ export default function LaponeOshikyoku9Public() {
 
     ctx.textAlign = "center";
     ctx.fillStyle = "#2b2420";
-    ctx.font = "900 46px 'Zen Kaku Gothic New', sans-serif";
-    ctx.fillText("LAPONE \u63a8\u3057\u66f29\u9078", cx, 78);
-    ctx.font = "500 20px 'Noto Sans JP', sans-serif";
+    ctx.font = "900 46px 'Zen Maru Gothic', sans-serif";
+    ctx.fillText("LAPONE 推し曲9選", cx, 78);
+    ctx.font = "500 20px 'Zen Maru Gothic', sans-serif";
     ctx.fillStyle = "#d97a3a";
     ctx.fillText("MY BEST 9 SETLIST", cx, 112);
 
@@ -241,18 +391,18 @@ export default function LaponeOshikyoku9Public() {
 
         ctx.textAlign = "left";
         ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 21px 'Noto Sans JP', sans-serif";
+        ctx.font = "bold 21px 'Zen Maru Gothic', sans-serif";
         ctx.fillText(truncateToWidth(ctx, song.title, cellW - 32), x + 16, y + cellH - 42);
-        ctx.font = "500 15px 'Noto Sans JP', sans-serif";
+        ctx.font = "500 15px 'Zen Maru Gothic', sans-serif";
         ctx.fillStyle = "#ffd7ae";
         ctx.fillText(truncateToWidth(ctx, song.group, cellW - 32), x + 16, y + cellH - 16);
       } else {
         ctx.fillStyle = "#fdece0";
         ctx.fillRect(x, y, cellW, cellH);
         ctx.fillStyle = "#e3b088";
-        ctx.font = "500 20px 'Noto Sans JP', sans-serif";
+        ctx.font = "500 20px 'Zen Maru Gothic', sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(isCenter ? "\u30bb\u30f3\u30bf\u30fc" : "\u7a7a\u5e2d", x + cellW / 2, y + cellH / 2);
+        ctx.fillText(isCenter ? "センター" : "空席", x + cellW / 2, y + cellH / 2);
       }
       ctx.restore();
 
@@ -281,7 +431,7 @@ export default function LaponeOshikyoku9Public() {
         ctx.font = "bold 24px sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("\u2605", x + 34, y + 36);
+        ctx.fillText("★", x + 34, y + 36);
         ctx.textBaseline = "alphabetic";
         ctx.restore();
       }
@@ -289,8 +439,8 @@ export default function LaponeOshikyoku9Public() {
 
     ctx.textAlign = "center";
     ctx.fillStyle = "#c99a76";
-    ctx.font = "500 15px 'Noto Sans JP', sans-serif";
-    ctx.fillText("\u63a8\u3057\u66f29\u9078\u30e1\u30fc\u30ab\u30fc", cx, canvas.height - 26);
+    ctx.font = "500 15px 'Zen Maru Gothic', sans-serif";
+    ctx.fillText("推し曲9選メーカー", cx, canvas.height - 26);
 
     return canvas;
   }
@@ -327,6 +477,18 @@ export default function LaponeOshikyoku9Public() {
     }
   }
 
+  async function copyShareLink() {
+    if (!canExport) return;
+    const query = encodeShareQuery(selectedIds, centerId);
+    const url = `${window.location.origin}${window.location.pathname}?${query}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      showToast("シェアリンクをコピーしたよ！");
+    } catch (e) {
+      window.prompt("このリンクをコピーしてね", url);
+    }
+  }
+
   const canShareFiles = typeof navigator !== "undefined" && !!navigator.share;
 
   const progressLabel =
@@ -345,24 +507,31 @@ export default function LaponeOshikyoku9Public() {
         width: "100%",
         background: "linear-gradient(180deg, #fffaf6 0%, #fff1e6 100%)",
         color: "#2b2420",
-        fontFamily: "'Noto Sans JP', sans-serif",
+        fontFamily: FONT_STACK,
       }}
       className="p-4 sm:p-8"
     >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap');
         .lo9-scroll::-webkit-scrollbar { width: 6px; }
         .lo9-scroll::-webkit-scrollbar-thumb { background: #ffd7ae; border-radius: 999px; }
+        .lo9-thumb { transition: transform .15s ease, box-shadow .15s ease; }
+        .lo9-thumb:hover, .lo9-thumb:focus-visible { transform: scale(1.03); box-shadow: 0 6px 18px rgba(255,122,41,0.22); z-index: 1; }
+        .lo9-thumb:focus-visible { outline: 2px solid #FF7A29; outline-offset: 2px; }
+        button:focus-visible { outline: 2px solid #FF7A29; outline-offset: 2px; }
+        @keyframes lo9-fade-in { from { opacity: 0; } to { opacity: 1; } }
+        .lo9-modal-backdrop { animation: lo9-fade-in .15s ease; }
+        .lo9-toast { animation: lo9-fade-in .18s ease; }
       `}</style>
 
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto pb-24 sm:pb-0">
         <header className="text-center mb-6">
           <p style={{ color: "#d97a3a", letterSpacing: "0.25em", fontSize: 12, fontWeight: 500 }}>
             LAPONE FAN MAKER
           </p>
           <h1
             style={{
-              fontFamily: "'Zen Kaku Gothic New', sans-serif",
+              fontFamily: FONT_STACK,
               fontWeight: 900,
               fontSize: "clamp(28px, 5vw, 42px)",
               margin: "6px 0 8px",
@@ -382,6 +551,7 @@ export default function LaponeOshikyoku9Public() {
             <button
               key={g}
               onClick={() => setActiveGroup(g)}
+              aria-pressed={activeGroup === g}
               className="rounded-full px-4 py-1.5 text-sm font-medium"
               style={{
                 background: activeGroup === g ? "#FF7A29" : "#ffffff",
@@ -414,8 +584,19 @@ export default function LaponeOshikyoku9Public() {
                   return (
                     <div
                       key={song.id}
+                      role="button"
+                      tabIndex={0}
+                      aria-pressed={isSelected}
+                      aria-label={`${song.title}（${song.group}）を${isSelected ? "選択解除する" : "選択する"}`}
                       onClick={() => toggleSelect(song.id)}
-                      className="relative rounded-xl overflow-hidden cursor-pointer aspect-video"
+                      onKeyDown={(e) => {
+                        if (e.target !== e.currentTarget) return;
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          toggleSelect(song.id);
+                        }
+                      }}
+                      className="lo9-thumb relative rounded-xl overflow-hidden cursor-pointer aspect-video"
                       style={{
                         border: isSelected ? "2px solid #FF7A29" : "1px solid #ffe4d1",
                       }}
@@ -423,6 +604,8 @@ export default function LaponeOshikyoku9Public() {
                       <img
                         src={`https://img.youtube.com/vi/${song.videoId}/hqdefault.jpg`}
                         alt={song.title}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover"
                       />
                       <div
@@ -447,11 +630,22 @@ export default function LaponeOshikyoku9Public() {
                       <button
                         onClick={(e) => toggleCenter(song.id, e)}
                         disabled={!isSelected}
+                        aria-label={isCenter ? "センター指名を解除" : "センターに指名する"}
+                        aria-pressed={isCenter}
                         className="absolute top-1.5 left-1.5 rounded-full w-6 h-6 flex items-center justify-center disabled:opacity-0"
                         style={{ background: isCenter ? "#FF7A29" : "rgba(20,14,8,0.45)", color: "#ffffff" }}
                         title="センターにする"
                       >
                         <Star size={13} fill={isCenter ? "currentColor" : "none"} />
+                      </button>
+                      <button
+                        onClick={(e) => openPreview(song, e)}
+                        aria-label={`${song.title}のMVをプレビュー再生`}
+                        className="absolute bottom-1.5 right-1.5 rounded-full w-6 h-6 flex items-center justify-center"
+                        style={{ background: "rgba(20,14,8,0.55)", color: "#ffffff" }}
+                        title="プレビュー再生"
+                      >
+                        <Play size={11} fill="currentColor" />
                       </button>
                     </div>
                   );
@@ -503,6 +697,8 @@ export default function LaponeOshikyoku9Public() {
                           <img
                             src={`https://img.youtube.com/vi/${song.videoId}/hqdefault.jpg`}
                             alt={song.title}
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover"
                           />
                           <div
@@ -530,7 +726,7 @@ export default function LaponeOshikyoku9Public() {
                           className="w-full h-full flex items-center justify-center text-center"
                           style={{ border: "1px dashed #ffd7ae", color: "#e3b088", fontSize: 11, background: "#fff8f2" }}
                         >
-                          {isCenter ? "\u2605 センター" : "空席"}
+                          {isCenter ? "★ センター" : "空席"}
                         </div>
                       )}
                     </div>
@@ -539,34 +735,111 @@ export default function LaponeOshikyoku9Public() {
               </div>
 
               <div className="mt-5 space-y-2">
-                <p style={{ color: "#a3907f", fontSize: 12 }} className="text-center">
+                <p style={{ color: "#a3907f", fontSize: 12 }} className="text-center" aria-live="polite">
                   {progressLabel}
                 </p>
-                <button
-                  onClick={handleSaveOrShare}
-                  disabled={!canExport || exporting}
-                  className="w-full font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
-                  style={{
-                    background: canExport ? "#FF7A29" : "#f5e9de",
-                    color: canExport ? "#ffffff" : "#c9b6a6",
-                    cursor: canExport ? "pointer" : "not-allowed",
-                  }}
-                >
-                  {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
-                  {exporting ? "書き出し中..." : canShareFiles ? "シェアする" : "画像を保存"}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveOrShare}
+                    disabled={!canExport || exporting}
+                    className="flex-1 font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
+                    style={{
+                      background: canExport ? "#FF7A29" : "#f5e9de",
+                      color: canExport ? "#ffffff" : "#c9b6a6",
+                      cursor: canExport ? "pointer" : "not-allowed",
+                    }}
+                  >
+                    {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
+                    {exporting ? "書き出し中..." : canShareFiles ? "シェアする" : "画像を保存"}
+                  </button>
+                  <button
+                    onClick={copyShareLink}
+                    disabled={!canExport}
+                    aria-label="この組み合わせの共有リンクをコピー"
+                    title="共有リンクをコピー"
+                    className="rounded-lg px-3.5 flex items-center justify-center"
+                    style={{
+                      background: canExport ? "#fff3ea" : "#f5e9de",
+                      color: canExport ? "#FF7A29" : "#c9b6a6",
+                      border: `1px solid ${canExport ? "#FF7A29" : "#f5e9de"}`,
+                      cursor: canExport ? "pointer" : "not-allowed",
+                    }}
+                  >
+                    <Link2 size={16} />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
+      {/* mobile固定アクションバー：ギャラリーをスクロール中でも進捗と保存ボタンが見える */}
+      {selectedCount > 0 && (
+        <div
+          className="sm:hidden fixed bottom-0 inset-x-0 px-4 py-3 flex items-center gap-3"
+          style={{ background: "#fffaf6", borderTop: "1px solid #ffe4d1", boxShadow: "0 -4px 16px rgba(0,0,0,0.06)", zIndex: 20 }}
+        >
+          <p className="flex-1 truncate" style={{ color: "#8a7a6d", fontSize: 12 }} aria-live="polite">
+            {progressLabel}
+          </p>
+          <button
+            onClick={handleSaveOrShare}
+            disabled={!canExport || exporting}
+            aria-label={canShareFiles ? "シェアする" : "画像を保存"}
+            className="font-bold rounded-lg py-2 px-4 text-sm flex items-center justify-center gap-2 shrink-0"
+            style={{
+              background: canExport ? "#FF7A29" : "#f5e9de",
+              color: canExport ? "#ffffff" : "#c9b6a6",
+            }}
+          >
+            {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
+          </button>
+        </div>
+      )}
+
       {toast && (
         <div
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 text-sm px-4 py-2 rounded-full"
-          style={{ background: "#2b2420", color: "#ffffff" }}
+          role="status"
+          aria-live="polite"
+          className="lo9-toast fixed bottom-6 left-1/2 -translate-x-1/2 text-sm px-4 py-2 rounded-full"
+          style={{ background: "#2b2420", color: "#ffffff", zIndex: 30 }}
         >
           {toast}
+        </div>
+      )}
+
+      {previewSong && (
+        <div
+          className="lo9-modal-backdrop fixed inset-0 flex items-center justify-center p-4"
+          style={{ background: "rgba(20,14,8,0.72)", zIndex: 40 }}
+          onClick={() => setPreviewSong(null)}
+        >
+          <div className="w-full max-w-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-2 gap-2">
+              <p style={{ color: "#ffffff", fontWeight: 700, fontSize: 14 }} className="truncate">
+                {previewSong.title} ・ {previewSong.group}
+              </p>
+              <button
+                onClick={() => setPreviewSong(null)}
+                aria-label="プレビューを閉じる"
+                style={{ color: "#ffffff" }}
+                className="shrink-0"
+              >
+                <X size={22} />
+              </button>
+            </div>
+            <div className="rounded-xl overflow-hidden aspect-video" style={{ background: "#000" }}>
+              <iframe
+                width="100%"
+                height="100%"
+                src={`https://www.youtube.com/embed/${previewSong.videoId}?autoplay=1`}
+                title={previewSong.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
