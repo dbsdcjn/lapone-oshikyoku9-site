@@ -9,145 +9,145 @@ import { Star, Download, RefreshCw, Check, Share2, Play, X, Link2 } from "lucide
 // JO1 / INI / DXTEEN / KO1KEYZ / ME:I / IS:SUE で統一してね。
 // ---------------------------------------------------------------------------
 const SONGS = [
-  { id: "s1", title: "All 4 U", group: "INI", videoId: "nBBYmYvsbP0" },
-  { id: "s2", title: "WMDA (Where My Drums At)", group: "INI", videoId: "Xptp59SzcL0" },
-  { id: "s3", title: "LOUD", group: "INI", videoId: "ShmbjdP4eoI" },
-  { id: "s4", title: "LEGIT", group: "INI", videoId: "j0M2ZH_5wCk" },
-  { id: "s5", title: "FANFARE", group: "INI", videoId: "K3JGhIkExzo" },
-  { id: "s6", title: "SPECTRA", group: "INI", videoId: "aMOa320erOQ" },
-  { id: "s7", title: "Rocketeer", group: "INI", videoId: "xgWFK4REfgk" },
-  { id: "s8", title: "無限大(INFINITY)", group: "JO1", videoId: "U-n1BR5JCDI" },
-  { id: "s9", title: "OH-EH-OH", group: "JO1", videoId: "jp2aivJn9gg" },
-  { id: "s10", title: "Shine A Light", group: "JO1", videoId: "3tna5dDdDKc" },
-  { id: "s11", title: "Born To Be Wild", group: "JO1", videoId: "-_P_cD0yimw" },
-  { id: "s12", title: "REAL", group: "JO1", videoId: "BMG_ZlqwOZM" },
-  { id: "s13", title: "STAY [SUMMER VER.]", group: "JO1", videoId: "OfH19dWtuK8" },
-  { id: "s14", title: "僕らの季節", group: "JO1", videoId: "Zxnc3aMHt0E" },
-  { id: "s15", title: "飛べるから", group: "JO1", videoId: "R8thF-ZdSFI" },
-  { id: "s16", title: "With Us", group: "JO1", videoId: "Zf59GBy4564" },
-  { id: "s17", title: "SuperCali", group: "JO1", videoId: "5nE7budaeO4" },
-  { id: "s18", title: "Tiger", group: "JO1", videoId: "ZBFopHu5RsE" },
-  { id: "s19", title: "NEWSmile", group: "JO1", videoId: "ID6TB4slrCQ" },
-  { id: "s20", title: "RadioVision", group: "JO1", videoId: "A8Z_0W_l2Io" },
-  { id: "s21", title: "Venus", group: "JO1", videoId: "3iSsqYWKJYs" },
-  { id: "s22", title: "Eyes On Me (feat.R3HAB)", group: "JO1", videoId: "NvdrZ_Bgk38" },
-  { id: "s23", title: "Your Key", group: "JO1", videoId: "70zBVAFqvHQ" },
-  { id: "s24", title: "Love seeker", group: "JO1", videoId: "jjr6yrzUAqI" },
-  { id: "s25", title: "WHERE DO WE GO", group: "JO1", videoId: "q-RrB2OBf6s" },
-  { id: "s26", title: "BE CLASSIC", group: "JO1", videoId: "PjhdKY0hyCA" },
-  { id: "s27", title: "Handz In My Pocket", group: "JO1", videoId: "wniN-2kFKRc" },
-  { id: "s28", title: "景色 (JI BLUE)", group: "JO1", videoId: "KLEaBDx3JHc" },
-  { id: "s28b", title: "景色 (JI BLUE)", group: "INI", videoId: "KLEaBDx3JHc" },
-  { id: "s29", title: "Brighter", group: "INI", videoId: "99j1FLRE2HQ" },
-  { id: "s30", title: "CALL 119", group: "INI", videoId: "RJJAJwJttiY" },
-  { id: "s31", title: "We Are", group: "INI", videoId: "_7UIC72D8II" },
-  { id: "s32", title: "Password", group: "INI", videoId: "ZU58-PZnXOM" },
-  { id: "s33", title: "HANA_花", group: "INI", videoId: "gX-kRZi2PXc" },
-  { id: "s34", title: "DOMINANCE", group: "INI", videoId: "1NY-tAGiW5M" },
-  { id: "s35", title: "君がいたから", group: "INI", videoId: "Rmt06HTHHWQ" },
-  { id: "s36", title: "Brand New Day", group: "DXTEEN", videoId: "7k0Qktw8n2E" },
-  { id: "s37", title: "First Flight", group: "DXTEEN", videoId: "TwN7GRE-IjM" },
-  { id: "s38", title: "Snowin'", group: "DXTEEN", videoId: "7osGrOq45oQ" },
-  { id: "s39", title: "Dance On Open World", group: "DXTEEN", videoId: "27jGFxEdbXQ" },
-  { id: "s40", title: "Level Up", group: "DXTEEN", videoId: "-gWHk314lHs" },
-  { id: "s41", title: "Tick-Tack", group: "DXTEEN", videoId: "ad19Ss2buRc" },
-  { id: "s42", title: "両片想い", group: "DXTEEN", videoId: "esiaDnFotXQ" },
-  { id: "s43", title: "ハルコイ", group: "DXTEEN", videoId: "xLiC0ivBhlA" },
-  { id: "s44", title: "Click", group: "ME:I", videoId: "G-LdNMa99oQ" },
-  { id: "s45", title: "Hi-Five", group: "ME:I", videoId: "2uU7cWfnuKw" },
-  { id: "s46", title: "MUSE", group: "ME:I", videoId: "zPmSwXMQtRk" },
-  { id: "s47", title: "THIS IS ME:I", group: "ME:I", videoId: "UwpfFRuu2lI" },
-  { id: "s48", title: "花咲く道", group: "ME:I", videoId: "ouF70vuL6pg" },
-  { id: "s49", title: "CONNECT", group: "IS:SUE", videoId: "OTKY-xljazo" },
-  { id: "s50", title: "THE FLASH GIRL", group: "IS:SUE", videoId: "aEPF_mB44tc" },
-  { id: "s51", title: "SHINING", group: "IS:SUE", videoId: "bKERxsZgFe0" },
-  { id: "s52", title: "Phase", group: "IS:SUE", videoId: "kacuL0bgsdI" },
-  { id: "s53", title: "Quartet", group: "IS:SUE", videoId: "RkC-XfuwCsM" },
-  { id: "s54", title: "ICY (Performance Ver.)", group: "JO1", videoId: "zUzk8Z-ZUWM" },
-  { id: "s55", title: "Trigger (Performance Ver.)", group: "JO1", videoId: "E0T3t-qc7-0" },
-  { id: "s56", title: "Walk It Like I Talk It (Performance Ver.)", group: "JO1", videoId: "RgWr9jCN8jo" },
-  { id: "s57", title: "RUSH (JO1DER SHOW 2026 Live)", group: "JO1", videoId: "Zha4ADdx8gs" },
-  { id: "s58", title: "BE CLASSIC (JO1DER SHOW 2025 Live)", group: "JO1", videoId: "Mx9QP_W261Q" },
-  { id: "s59", title: "Aqua (4th Anniversary Live)", group: "JO1", videoId: "OW7ArDFfiTE" },
-  { id: "s60", title: "ONE NIGHT (Performance Ver.)", group: "INI", videoId: "iP1LJrV_mm8" },
-  { id: "s61", title: "DOMINANCE (Performance Ver.)", group: "INI", videoId: "EEIR8iaMCA8" },
-  { id: "s62", title: "WMDA(Where My Drums At) (Performance Ver.)", group: "INI", videoId: "YodQDDLRMBk" },
-  { id: "s63", title: "DOMINANCE+WMDA (ROCK IN JAPAN 2025 Live)", group: "INI", videoId: "rPTJEEGpLN8" },
-  { id: "s64", title: "Non-Stop (XQUARE Live)", group: "INI", videoId: "B_LUdObnc-0" },
-  { id: "s65", title: "Good Luck (Performance Ver.)", group: "DXTEEN", videoId: "oAHXydQ7Tes" },
-  { id: "s66", title: "Dance On Open World (Performance Ver.)", group: "DXTEEN", videoId: "iLqoGqgd03o" },
-  { id: "s67", title: "Level Up (Performance Ver.)", group: "DXTEEN", videoId: "W02HsuZ2jrs" },
-  { id: "s68", title: "両片想い (ARENA LIVE 2026)", group: "DXTEEN", videoId: "LyGqQWJo7FM" },
-  { id: "s69", title: "Handle (LAPOSTA 2025 Live)", group: "DXTEEN", videoId: "z05drVT-RRM" },
-  { id: "s70", title: "What's DXTEEN? (ARENA LIVE 2026)", group: "DXTEEN", videoId: "rf7hQYW6i7s" },
-  { id: "s71", title: "MUSE (Performance Ver.)", group: "ME:I", videoId: "hJADkExLWe4" },
-  { id: "s72", title: "THIS IS ME:I (Performance Ver.)", group: "ME:I", videoId: "qlTnORS2Jhk" },
-  { id: "s73", title: "Hi-Five (Performance Ver.)", group: "ME:I", videoId: "2ByRD29wKBE" },
-  { id: "s74", title: "MUSE (ROCK IN JAPAN 2025 Live)", group: "ME:I", videoId: "3hpjZ-nKVDg" },
-  { id: "s75", title: "MUSE (KCON JAPAN 2026 Live)", group: "ME:I", videoId: "dNsP1o783Z8" },
-  { id: "s76", title: "Super Luna (Performance Ver.)", group: "IS:SUE", videoId: "4Xt_hR0KNvY" },
-  { id: "s77", title: "Telepathy (Performance Ver.)", group: "IS:SUE", videoId: "InlIOxeHDYQ" },
-  { id: "s78", title: "Breaking Thru the Line (Performance Ver.)", group: "IS:SUE", videoId: "gH2pPQnrFrA" },
-  { id: "s79", title: "Quartet (1ST TOUR FINAL Live)", group: "IS:SUE", videoId: "1u-Qz9z4R84" },
-  { id: "s80", title: "Super Luna (1ST TOUR Live)", group: "IS:SUE", videoId: "rYIwTVwNwwc" },
-  { id: "s81", title: "NO Game Over (ROCK IN JAPAN 2025 Live)", group: "IS:SUE", videoId: "pYz5Zyjl-Ak" },
-  { id: "s82", title: "無限大(INFINITY) (Performance Ver.)", group: "JO1", videoId: "4J6YxGAAido" },
-  { id: "s83", title: "La Pa Pa Pam (Performance Ver.)", group: "JO1", videoId: "xexjuif_nWk" },
-  { id: "s84", title: "OH-EH-OH (Performance Ver.)", group: "JO1", videoId: "Mqi1_EqY6hE" },
-  { id: "s85", title: "Shine A Light (Performance Ver.)", group: "JO1", videoId: "ibjLhgmHjM4" },
-  { id: "s86", title: "Born To Be Wild (Performance Ver.)", group: "JO1", videoId: "VNQcT9sZL8k" },
-  { id: "s87", title: "Design (Performance Ver.)", group: "JO1", videoId: "d_S9B55H5u4" },
-  { id: "s88", title: "REAL (Performance Ver.)", group: "JO1", videoId: "u-HL6kaobaM" },
-  { id: "s89", title: "Run&Go (Dance Performance Ver.)", group: "JO1", videoId: "vyWqlXAu5RY" },
-  { id: "s90", title: "僕らの季節 (Performance Ver.)", group: "JO1", videoId: "nIMqvGQtJHU" },
-  { id: "s91", title: "With Us (Performance Ver.)", group: "JO1", videoId: "HmopcEXjYUc" },
-  { id: "s92", title: "SuperCali (Performance Ver.)", group: "JO1", videoId: "m28FSsyWXBw" },
-  { id: "s93", title: "Tiger (Performance Ver.)", group: "JO1", videoId: "sEvOgbdsCmo" },
-  { id: "s94", title: "Test Drive (Performance Ver.)", group: "JO1", videoId: "erYO3TOX5jU" },
-  { id: "s95", title: "HAPPY UNBIRTHDAY (Performance Ver.)", group: "JO1", videoId: "z-8I2Nw9eN4" },
-  { id: "s96", title: "Handz In My Pocket (Performance Ver.)", group: "JO1", videoId: "tS-3R9aab2I" },
-  { id: "s97", title: "With Us (KIZUNA 2022 Live)", group: "JO1", videoId: "akkKeR0CYUk" },
-  { id: "s98", title: "Born To Be Wild (BEYOND THE DARK 2023 Osaka Live)", group: "JO1", videoId: "uwtO-d4Vn_A" },
-  { id: "s99", title: "Trigger (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "Jxt2mbXmnKY" },
-  { id: "s100", title: "NEWSmile (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "XTMxwWkza4o" },
-  { id: "s101", title: "Fairytale (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "WNcJg5nX-s4" },
-  { id: "s102", title: "EIEN (JO1DER SHOW 2026 Tokyo Dome Live)", group: "JO1", videoId: "yZbBQF6CEs0" },
-  { id: "s103", title: "Rocketeer (Performance Ver.)", group: "INI", videoId: "gPPN33XFuXI" },
-  { id: "s104", title: "Brighter (Performance Ver.)", group: "INI", videoId: "Z33NO8UFtx8" },
-  { id: "s105", title: "CALL 119 (Performance Ver.)", group: "INI", videoId: "-NdXsvCSBlI" },
-  { id: "s106", title: "We Are (Performance Ver.)", group: "INI", videoId: "8I87RI7Uv7E" },
-  { id: "s107", title: "Password (Performance Ver.)", group: "INI", videoId: "HBMyXVZ5cO8" },
-  { id: "s108", title: "SPECTRA (Performance Ver.)", group: "INI", videoId: "U8TRJyhUgyg" },
-  { id: "s109", title: "New Day (Performance Ver.)", group: "INI", videoId: "HUT81VaUeyY" },
-  { id: "s110", title: "FANFARE (Performance Ver.)", group: "INI", videoId: "AUoh8C__VsA" },
-  { id: "s111", title: "LEGIT (Performance Ver.)", group: "INI", videoId: "k4syFgku51o" },
-  { id: "s112", title: "LOUD (Performance Ver.)", group: "INI", videoId: "qFYNz588Eoc" },
-  { id: "s113", title: "All 4 U (Performance Ver.)", group: "INI", videoId: "VZxF_PX01Sk" },
-  { id: "s114", title: "Rocketeer (BREAK THE CODE 2022 Live)", group: "INI", videoId: "WX6ml-ncKSs" },
-  { id: "s115", title: "BOMBARDA (BREAK THE CODE 2022 Live)", group: "INI", videoId: "degadFGDbFw" },
-  { id: "s116", title: "Dramatic (BREAK THE CODE 2022 Live)", group: "INI", videoId: "DHUvG3iWzxg" },
-  { id: "s117", title: "CALL 119 (BREAK THE CODE 2022 Live)", group: "INI", videoId: "HGTvpiZy7c8" },
-  { id: "s118", title: "LEGIT (READY TO POP! 2023 Live)", group: "INI", videoId: "qMEQ5wi09h8" },
-  { id: "s119", title: "10 THINGS (Christmas Costume ver. Live)", group: "INI", videoId: "LE6TpU3aJh8" },
-  { id: "s120", title: "Rocketeer (FLIP THE CIRCLE 2024 Live)", group: "INI", videoId: "i1ZnwsFKLP0" },
-  { id: "s121", title: "Brighter (XQUARE ver. 2025 Live)", group: "INI", videoId: "n2cM6H94NL8" },
-  { id: "s122", title: "Brand New Day (Performance Ver.)", group: "DXTEEN", videoId: "GNen6VglFZo" },
-  { id: "s123", title: "Come Over (Performance Ver.)", group: "DXTEEN", videoId: "8RcM4Kyj29M" },
-  { id: "s124", title: "First Flight (Performance Ver.)", group: "DXTEEN", videoId: "PuI_6tQQffQ" },
-  { id: "s125", title: "Dive (Performance Ver.)", group: "DXTEEN", videoId: "4qVD_8nnVvY" },
-  { id: "s126", title: "Snowin' (Performance Ver.)", group: "DXTEEN", videoId: "UE7KjEww7q0" },
-  { id: "s127", title: "Our Sky (Performance Ver.)", group: "DXTEEN", videoId: "6rSK3T1WNIw" },
-  { id: "s128", title: "JOY (Heart & Soul 2026 Live)", group: "DXTEEN", videoId: "nC_yW6pL8OI" },
-  { id: "s129", title: "両片想い (Survive FES Stage CAM)", group: "DXTEEN", videoId: "psI02EKIjDU" },
-  { id: "s130", title: "Update ME (Performance Ver.)", group: "ME:I", videoId: "4Q3OSgceGvQ" },
-  { id: "s131", title: "Royal Energy (Extended Ver., Arena Live Tour Encore Tokyo)", group: "ME:I", videoId: "lCX9yMlAHdQ" },
-  { id: "s132", title: "TOXIC (ME:I Ver., Rock In Japan 2024)", group: "ME:I", videoId: "JZEGUVfqoOY" },
-  { id: "s133", title: "想像以上 (ME:I Ver., Countdown Japan 24/25)", group: "ME:I", videoId: "F5ftxL33Q8c" },
-  { id: "s134", title: "THIS IS ME:I (Arena Live Tour Hiroshima Live)", group: "ME:I", videoId: "qFYVBoN5t70" },
-  { id: "s135", title: "Fan Letter (Track Video)", group: "ME:I", videoId: "DUpjiiZTEek" },
-  { id: "s136", title: "CONNECT (Survive FES Live)", group: "IS:SUE", videoId: "WPj74vUGC8I" },
-  { id: "s137", title: "come again (Original by m-flo, REBORN Collection 2026 Live)", group: "IS:SUE", videoId: "IdqLY4vu7xM" },
-  { id: "s138", title: "THE FLASH GIRL (LAPOSTA 2025 Tokyo Dome Live)", group: "IS:SUE", videoId: "uwIG7AveXNI" },
+  { id: "s1", type: "MV", title: "All 4 U", group: "INI", videoId: "nBBYmYvsbP0" },
+  { id: "s2", type: "MV", title: "WMDA (Where My Drums At)", group: "INI", videoId: "Xptp59SzcL0" },
+  { id: "s3", type: "MV", title: "LOUD", group: "INI", videoId: "ShmbjdP4eoI" },
+  { id: "s4", type: "MV", title: "LEGIT", group: "INI", videoId: "j0M2ZH_5wCk" },
+  { id: "s5", type: "MV", title: "FANFARE", group: "INI", videoId: "K3JGhIkExzo" },
+  { id: "s6", type: "MV", title: "SPECTRA", group: "INI", videoId: "aMOa320erOQ" },
+  { id: "s7", type: "MV", title: "Rocketeer", group: "INI", videoId: "xgWFK4REfgk" },
+  { id: "s8", type: "MV", title: "無限大(INFINITY)", group: "JO1", videoId: "U-n1BR5JCDI" },
+  { id: "s9", type: "MV", title: "OH-EH-OH", group: "JO1", videoId: "jp2aivJn9gg" },
+  { id: "s10", type: "MV", title: "Shine A Light", group: "JO1", videoId: "3tna5dDdDKc" },
+  { id: "s11", type: "MV", title: "Born To Be Wild", group: "JO1", videoId: "-_P_cD0yimw" },
+  { id: "s12", type: "MV", title: "REAL", group: "JO1", videoId: "BMG_ZlqwOZM" },
+  { id: "s13", type: "MV", title: "STAY [SUMMER VER.]", group: "JO1", videoId: "OfH19dWtuK8" },
+  { id: "s14", type: "MV", title: "僕らの季節", group: "JO1", videoId: "Zxnc3aMHt0E" },
+  { id: "s15", type: "MV", title: "飛べるから", group: "JO1", videoId: "R8thF-ZdSFI" },
+  { id: "s16", type: "MV", title: "With Us", group: "JO1", videoId: "Zf59GBy4564" },
+  { id: "s17", type: "MV", title: "SuperCali", group: "JO1", videoId: "5nE7budaeO4" },
+  { id: "s18", type: "MV", title: "Tiger", group: "JO1", videoId: "ZBFopHu5RsE" },
+  { id: "s19", type: "MV", title: "NEWSmile", group: "JO1", videoId: "ID6TB4slrCQ" },
+  { id: "s20", type: "MV", title: "RadioVision", group: "JO1", videoId: "A8Z_0W_l2Io" },
+  { id: "s21", type: "MV", title: "Venus", group: "JO1", videoId: "3iSsqYWKJYs" },
+  { id: "s22", type: "MV", title: "Eyes On Me (feat.R3HAB)", group: "JO1", videoId: "NvdrZ_Bgk38" },
+  { id: "s23", type: "MV", title: "Your Key", group: "JO1", videoId: "70zBVAFqvHQ" },
+  { id: "s24", type: "MV", title: "Love seeker", group: "JO1", videoId: "jjr6yrzUAqI" },
+  { id: "s25", type: "MV", title: "WHERE DO WE GO", group: "JO1", videoId: "q-RrB2OBf6s" },
+  { id: "s26", type: "MV", title: "BE CLASSIC", group: "JO1", videoId: "PjhdKY0hyCA" },
+  { id: "s27", type: "MV", title: "Handz In My Pocket", group: "JO1", videoId: "wniN-2kFKRc" },
+  { id: "s28", type: "MV", title: "景色 (JI BLUE)", group: "JO1", videoId: "KLEaBDx3JHc" },
+  { id: "s28b", type: "MV", title: "景色 (JI BLUE)", group: "INI", videoId: "KLEaBDx3JHc" },
+  { id: "s29", type: "MV", title: "Brighter", group: "INI", videoId: "99j1FLRE2HQ" },
+  { id: "s30", type: "MV", title: "CALL 119", group: "INI", videoId: "RJJAJwJttiY" },
+  { id: "s31", type: "MV", title: "We Are", group: "INI", videoId: "_7UIC72D8II" },
+  { id: "s32", type: "MV", title: "Password", group: "INI", videoId: "ZU58-PZnXOM" },
+  { id: "s33", type: "MV", title: "HANA_花", group: "INI", videoId: "gX-kRZi2PXc" },
+  { id: "s34", type: "MV", title: "DOMINANCE", group: "INI", videoId: "1NY-tAGiW5M" },
+  { id: "s35", type: "MV", title: "君がいたから", group: "INI", videoId: "Rmt06HTHHWQ" },
+  { id: "s36", type: "MV", title: "Brand New Day", group: "DXTEEN", videoId: "7k0Qktw8n2E" },
+  { id: "s37", type: "MV", title: "First Flight", group: "DXTEEN", videoId: "TwN7GRE-IjM" },
+  { id: "s38", type: "MV", title: "Snowin'", group: "DXTEEN", videoId: "7osGrOq45oQ" },
+  { id: "s39", type: "MV", title: "Dance On Open World", group: "DXTEEN", videoId: "27jGFxEdbXQ" },
+  { id: "s40", type: "MV", title: "Level Up", group: "DXTEEN", videoId: "-gWHk314lHs" },
+  { id: "s41", type: "MV", title: "Tick-Tack", group: "DXTEEN", videoId: "ad19Ss2buRc" },
+  { id: "s42", type: "MV", title: "両片想い", group: "DXTEEN", videoId: "esiaDnFotXQ" },
+  { id: "s43", type: "MV", title: "ハルコイ", group: "DXTEEN", videoId: "xLiC0ivBhlA" },
+  { id: "s44", type: "MV", title: "Click", group: "ME:I", videoId: "G-LdNMa99oQ" },
+  { id: "s45", type: "MV", title: "Hi-Five", group: "ME:I", videoId: "2uU7cWfnuKw" },
+  { id: "s46", type: "MV", title: "MUSE", group: "ME:I", videoId: "zPmSwXMQtRk" },
+  { id: "s47", type: "MV", title: "THIS IS ME:I", group: "ME:I", videoId: "UwpfFRuu2lI" },
+  { id: "s48", type: "MV", title: "花咲く道", group: "ME:I", videoId: "ouF70vuL6pg" },
+  { id: "s49", type: "MV", title: "CONNECT", group: "IS:SUE", videoId: "OTKY-xljazo" },
+  { id: "s50", type: "MV", title: "THE FLASH GIRL", group: "IS:SUE", videoId: "aEPF_mB44tc" },
+  { id: "s51", type: "MV", title: "SHINING", group: "IS:SUE", videoId: "bKERxsZgFe0" },
+  { id: "s52", type: "MV", title: "Phase", group: "IS:SUE", videoId: "kacuL0bgsdI" },
+  { id: "s53", type: "MV", title: "Quartet", group: "IS:SUE", videoId: "RkC-XfuwCsM" },
+  { id: "s54", type: "LIVE", title: "ICY (Performance Ver.)", group: "JO1", videoId: "zUzk8Z-ZUWM" },
+  { id: "s55", type: "LIVE", title: "Trigger (Performance Ver.)", group: "JO1", videoId: "E0T3t-qc7-0" },
+  { id: "s56", type: "LIVE", title: "Walk It Like I Talk It (Performance Ver.)", group: "JO1", videoId: "RgWr9jCN8jo" },
+  { id: "s57", type: "LIVE", title: "RUSH (JO1DER SHOW 2026 Live)", group: "JO1", videoId: "Zha4ADdx8gs" },
+  { id: "s58", type: "LIVE", title: "BE CLASSIC (JO1DER SHOW 2025 Live)", group: "JO1", videoId: "Mx9QP_W261Q" },
+  { id: "s59", type: "LIVE", title: "Aqua (4th Anniversary Live)", group: "JO1", videoId: "OW7ArDFfiTE" },
+  { id: "s60", type: "LIVE", title: "ONE NIGHT (Performance Ver.)", group: "INI", videoId: "iP1LJrV_mm8" },
+  { id: "s61", type: "LIVE", title: "DOMINANCE (Performance Ver.)", group: "INI", videoId: "EEIR8iaMCA8" },
+  { id: "s62", type: "LIVE", title: "WMDA(Where My Drums At) (Performance Ver.)", group: "INI", videoId: "YodQDDLRMBk" },
+  { id: "s63", type: "LIVE", title: "DOMINANCE+WMDA (ROCK IN JAPAN 2025 Live)", group: "INI", videoId: "rPTJEEGpLN8" },
+  { id: "s64", type: "LIVE", title: "Non-Stop (XQUARE Live)", group: "INI", videoId: "B_LUdObnc-0" },
+  { id: "s65", type: "LIVE", title: "Good Luck (Performance Ver.)", group: "DXTEEN", videoId: "oAHXydQ7Tes" },
+  { id: "s66", type: "LIVE", title: "Dance On Open World (Performance Ver.)", group: "DXTEEN", videoId: "iLqoGqgd03o" },
+  { id: "s67", type: "LIVE", title: "Level Up (Performance Ver.)", group: "DXTEEN", videoId: "W02HsuZ2jrs" },
+  { id: "s68", type: "LIVE", title: "両片想い (ARENA LIVE 2026)", group: "DXTEEN", videoId: "LyGqQWJo7FM" },
+  { id: "s69", type: "LIVE", title: "Handle (LAPOSTA 2025 Live)", group: "DXTEEN", videoId: "z05drVT-RRM" },
+  { id: "s70", type: "LIVE", title: "What's DXTEEN? (ARENA LIVE 2026)", group: "DXTEEN", videoId: "rf7hQYW6i7s" },
+  { id: "s71", type: "LIVE", title: "MUSE (Performance Ver.)", group: "ME:I", videoId: "hJADkExLWe4" },
+  { id: "s72", type: "LIVE", title: "THIS IS ME:I (Performance Ver.)", group: "ME:I", videoId: "qlTnORS2Jhk" },
+  { id: "s73", type: "LIVE", title: "Hi-Five (Performance Ver.)", group: "ME:I", videoId: "2ByRD29wKBE" },
+  { id: "s74", type: "LIVE", title: "MUSE (ROCK IN JAPAN 2025 Live)", group: "ME:I", videoId: "3hpjZ-nKVDg" },
+  { id: "s75", type: "LIVE", title: "MUSE (KCON JAPAN 2026 Live)", group: "ME:I", videoId: "dNsP1o783Z8" },
+  { id: "s76", type: "LIVE", title: "Super Luna (Performance Ver.)", group: "IS:SUE", videoId: "4Xt_hR0KNvY" },
+  { id: "s77", type: "LIVE", title: "Telepathy (Performance Ver.)", group: "IS:SUE", videoId: "InlIOxeHDYQ" },
+  { id: "s78", type: "LIVE", title: "Breaking Thru the Line (Performance Ver.)", group: "IS:SUE", videoId: "gH2pPQnrFrA" },
+  { id: "s79", type: "LIVE", title: "Quartet (1ST TOUR FINAL Live)", group: "IS:SUE", videoId: "1u-Qz9z4R84" },
+  { id: "s80", type: "LIVE", title: "Super Luna (1ST TOUR Live)", group: "IS:SUE", videoId: "rYIwTVwNwwc" },
+  { id: "s81", type: "LIVE", title: "NO Game Over (ROCK IN JAPAN 2025 Live)", group: "IS:SUE", videoId: "pYz5Zyjl-Ak" },
+  { id: "s82", type: "LIVE", title: "無限大(INFINITY) (Performance Ver.)", group: "JO1", videoId: "4J6YxGAAido" },
+  { id: "s83", type: "LIVE", title: "La Pa Pa Pam (Performance Ver.)", group: "JO1", videoId: "xexjuif_nWk" },
+  { id: "s84", type: "LIVE", title: "OH-EH-OH (Performance Ver.)", group: "JO1", videoId: "Mqi1_EqY6hE" },
+  { id: "s85", type: "LIVE", title: "Shine A Light (Performance Ver.)", group: "JO1", videoId: "ibjLhgmHjM4" },
+  { id: "s86", type: "LIVE", title: "Born To Be Wild (Performance Ver.)", group: "JO1", videoId: "VNQcT9sZL8k" },
+  { id: "s87", type: "LIVE", title: "Design (Performance Ver.)", group: "JO1", videoId: "d_S9B55H5u4" },
+  { id: "s88", type: "LIVE", title: "REAL (Performance Ver.)", group: "JO1", videoId: "u-HL6kaobaM" },
+  { id: "s89", type: "LIVE", title: "Run&Go (Dance Performance Ver.)", group: "JO1", videoId: "vyWqlXAu5RY" },
+  { id: "s90", type: "LIVE", title: "僕らの季節 (Performance Ver.)", group: "JO1", videoId: "nIMqvGQtJHU" },
+  { id: "s91", type: "LIVE", title: "With Us (Performance Ver.)", group: "JO1", videoId: "HmopcEXjYUc" },
+  { id: "s92", type: "LIVE", title: "SuperCali (Performance Ver.)", group: "JO1", videoId: "m28FSsyWXBw" },
+  { id: "s93", type: "LIVE", title: "Tiger (Performance Ver.)", group: "JO1", videoId: "sEvOgbdsCmo" },
+  { id: "s94", type: "LIVE", title: "Test Drive (Performance Ver.)", group: "JO1", videoId: "erYO3TOX5jU" },
+  { id: "s95", type: "LIVE", title: "HAPPY UNBIRTHDAY (Performance Ver.)", group: "JO1", videoId: "z-8I2Nw9eN4" },
+  { id: "s96", type: "LIVE", title: "Handz In My Pocket (Performance Ver.)", group: "JO1", videoId: "tS-3R9aab2I" },
+  { id: "s97", type: "LIVE", title: "With Us (KIZUNA 2022 Live)", group: "JO1", videoId: "akkKeR0CYUk" },
+  { id: "s98", type: "LIVE", title: "Born To Be Wild (BEYOND THE DARK 2023 Osaka Live)", group: "JO1", videoId: "uwtO-d4Vn_A" },
+  { id: "s99", type: "LIVE", title: "Trigger (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "Jxt2mbXmnKY" },
+  { id: "s100", type: "LIVE", title: "NEWSmile (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "XTMxwWkza4o" },
+  { id: "s101", type: "LIVE", title: "Fairytale (BEYOND THE DARK:RISE Live)", group: "JO1", videoId: "WNcJg5nX-s4" },
+  { id: "s102", type: "LIVE", title: "EIEN (JO1DER SHOW 2026 Tokyo Dome Live)", group: "JO1", videoId: "yZbBQF6CEs0" },
+  { id: "s103", type: "LIVE", title: "Rocketeer (Performance Ver.)", group: "INI", videoId: "gPPN33XFuXI" },
+  { id: "s104", type: "LIVE", title: "Brighter (Performance Ver.)", group: "INI", videoId: "Z33NO8UFtx8" },
+  { id: "s105", type: "LIVE", title: "CALL 119 (Performance Ver.)", group: "INI", videoId: "-NdXsvCSBlI" },
+  { id: "s106", type: "LIVE", title: "We Are (Performance Ver.)", group: "INI", videoId: "8I87RI7Uv7E" },
+  { id: "s107", type: "LIVE", title: "Password (Performance Ver.)", group: "INI", videoId: "HBMyXVZ5cO8" },
+  { id: "s108", type: "LIVE", title: "SPECTRA (Performance Ver.)", group: "INI", videoId: "U8TRJyhUgyg" },
+  { id: "s109", type: "LIVE", title: "New Day (Performance Ver.)", group: "INI", videoId: "HUT81VaUeyY" },
+  { id: "s110", type: "LIVE", title: "FANFARE (Performance Ver.)", group: "INI", videoId: "AUoh8C__VsA" },
+  { id: "s111", type: "LIVE", title: "LEGIT (Performance Ver.)", group: "INI", videoId: "k4syFgku51o" },
+  { id: "s112", type: "LIVE", title: "LOUD (Performance Ver.)", group: "INI", videoId: "qFYNz588Eoc" },
+  { id: "s113", type: "LIVE", title: "All 4 U (Performance Ver.)", group: "INI", videoId: "VZxF_PX01Sk" },
+  { id: "s114", type: "LIVE", title: "Rocketeer (BREAK THE CODE 2022 Live)", group: "INI", videoId: "WX6ml-ncKSs" },
+  { id: "s115", type: "LIVE", title: "BOMBARDA (BREAK THE CODE 2022 Live)", group: "INI", videoId: "degadFGDbFw" },
+  { id: "s116", type: "LIVE", title: "Dramatic (BREAK THE CODE 2022 Live)", group: "INI", videoId: "DHUvG3iWzxg" },
+  { id: "s117", type: "LIVE", title: "CALL 119 (BREAK THE CODE 2022 Live)", group: "INI", videoId: "HGTvpiZy7c8" },
+  { id: "s118", type: "LIVE", title: "LEGIT (READY TO POP! 2023 Live)", group: "INI", videoId: "qMEQ5wi09h8" },
+  { id: "s119", type: "LIVE", title: "10 THINGS (Christmas Costume ver. Live)", group: "INI", videoId: "LE6TpU3aJh8" },
+  { id: "s120", type: "LIVE", title: "Rocketeer (FLIP THE CIRCLE 2024 Live)", group: "INI", videoId: "i1ZnwsFKLP0" },
+  { id: "s121", type: "LIVE", title: "Brighter (XQUARE ver. 2025 Live)", group: "INI", videoId: "n2cM6H94NL8" },
+  { id: "s122", type: "LIVE", title: "Brand New Day (Performance Ver.)", group: "DXTEEN", videoId: "GNen6VglFZo" },
+  { id: "s123", type: "LIVE", title: "Come Over (Performance Ver.)", group: "DXTEEN", videoId: "8RcM4Kyj29M" },
+  { id: "s124", type: "LIVE", title: "First Flight (Performance Ver.)", group: "DXTEEN", videoId: "PuI_6tQQffQ" },
+  { id: "s125", type: "LIVE", title: "Dive (Performance Ver.)", group: "DXTEEN", videoId: "4qVD_8nnVvY" },
+  { id: "s126", type: "LIVE", title: "Snowin' (Performance Ver.)", group: "DXTEEN", videoId: "UE7KjEww7q0" },
+  { id: "s127", type: "LIVE", title: "Our Sky (Performance Ver.)", group: "DXTEEN", videoId: "6rSK3T1WNIw" },
+  { id: "s128", type: "LIVE", title: "JOY (Heart & Soul 2026 Live)", group: "DXTEEN", videoId: "nC_yW6pL8OI" },
+  { id: "s129", type: "LIVE", title: "両片想い (Survive FES Stage CAM)", group: "DXTEEN", videoId: "psI02EKIjDU" },
+  { id: "s130", type: "LIVE", title: "Update ME (Performance Ver.)", group: "ME:I", videoId: "4Q3OSgceGvQ" },
+  { id: "s131", type: "LIVE", title: "Royal Energy (Extended Ver., Arena Live Tour Encore Tokyo)", group: "ME:I", videoId: "lCX9yMlAHdQ" },
+  { id: "s132", type: "LIVE", title: "TOXIC (ME:I Ver., Rock In Japan 2024)", group: "ME:I", videoId: "JZEGUVfqoOY" },
+  { id: "s133", type: "LIVE", title: "想像以上 (ME:I Ver., Countdown Japan 24/25)", group: "ME:I", videoId: "F5ftxL33Q8c" },
+  { id: "s134", type: "LIVE", title: "THIS IS ME:I (Arena Live Tour Hiroshima Live)", group: "ME:I", videoId: "qFYVBoN5t70" },
+  { id: "s135", type: "LIVE", title: "Fan Letter (Track Video)", group: "ME:I", videoId: "DUpjiiZTEek" },
+  { id: "s136", type: "LIVE", title: "CONNECT (Survive FES Live)", group: "IS:SUE", videoId: "WPj74vUGC8I" },
+  { id: "s137", type: "LIVE", title: "come again (Original by m-flo, REBORN Collection 2026 Live)", group: "IS:SUE", videoId: "IdqLY4vu7xM" },
+  { id: "s138", type: "LIVE", title: "THE FLASH GIRL (LAPOSTA 2025 Tokyo Dome Live)", group: "IS:SUE", videoId: "uwIG7AveXNI" },
   // ここに続きを追加していく（KO1KEYZ も同じ形式でOK）
 ];
 
@@ -167,12 +167,22 @@ function loadImage(src, crossOrigin) {
 }
 
 function roundRectPath(ctx, x, y, w, h, r) {
+  // rは数値(全角均一)か、{tl,tr,br,bl}で角ごとの半径を指定できる
+  const c = typeof r === "number" ? { tl: r, tr: r, br: r, bl: r } : r || {};
+  const tl = c.tl || 0,
+    tr = c.tr || 0,
+    br = c.br || 0,
+    bl = c.bl || 0;
   ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
+  ctx.moveTo(x + tl, y);
+  ctx.lineTo(x + w - tr, y);
+  ctx.arcTo(x + w, y, x + w, y + tr, tr);
+  ctx.lineTo(x + w, y + h - br);
+  ctx.arcTo(x + w, y + h, x + w - br, y + h, br);
+  ctx.lineTo(x + bl, y + h);
+  ctx.arcTo(x, y + h, x, y + h - bl, bl);
+  ctx.lineTo(x, y + tl);
+  ctx.arcTo(x, y, x + tl, y, tl);
   ctx.closePath();
 }
 
@@ -184,6 +194,9 @@ function truncateToWidth(ctx, text, maxWidth) {
 }
 
 const GROUP_ORDER = ["JO1", "INI", "DXTEEN", "KO1KEYZ", "ME:I", "IS:SUE"];
+
+// 選べるのは公式MV/PVのみ。Performance Ver.やLive映像はデータとして残しつつピッカーからは除外。
+const SELECTABLE_SONGS = SONGS.filter((s) => s.type !== "LIVE");
 
 function encodeShareQuery(selectedIds, centerId) {
   const params = new URLSearchParams();
@@ -199,7 +212,7 @@ function readShareFromLocation() {
     if (!set) return null;
     const center = params.get("center");
     const ids = set.split(",").filter(Boolean);
-    const validIds = ids.filter((id) => SONGS.some((s) => s.id === id)).slice(0, 9);
+    const validIds = ids.filter((id) => SELECTABLE_SONGS.some((s) => s.id === id)).slice(0, 9);
     if (validIds.length === 0) return null;
     return {
       selectedIds: validIds,
@@ -216,7 +229,7 @@ function readSavedSelection() {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || !Array.isArray(parsed.selectedIds)) return null;
-    const validIds = parsed.selectedIds.filter((id) => SONGS.some((s) => s.id === id)).slice(0, 9);
+    const validIds = parsed.selectedIds.filter((id) => SELECTABLE_SONGS.some((s) => s.id === id)).slice(0, 9);
     return {
       selectedIds: validIds,
       centerId: parsed.centerId && validIds.includes(parsed.centerId) ? parsed.centerId : null,
@@ -228,7 +241,7 @@ function readSavedSelection() {
 
 export default function LaponeOshikyoku9Public() {
   const groups = useMemo(() => {
-    const present = new Set(SONGS.map((s) => s.group));
+    const present = new Set(SELECTABLE_SONGS.map((s) => s.group));
     return ["すべて", ...GROUP_ORDER.filter((g) => present.has(g))];
   }, []);
 
@@ -272,8 +285,8 @@ export default function LaponeOshikyoku9Public() {
 
   const visibleSongs =
     activeGroup === "すべて"
-      ? [...SONGS].sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group))
-      : SONGS.filter((s) => s.group === activeGroup);
+      ? [...SELECTABLE_SONGS].sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group))
+      : SELECTABLE_SONGS.filter((s) => s.group === activeGroup);
 
   function toggleSelect(id) {
     setSelectedIds((prev) => {
@@ -308,9 +321,9 @@ export default function LaponeOshikyoku9Public() {
   const slotOrder = [0, 1, 2, 3, 5, 6, 7, 8];
   const outer = selectedIds.filter((id) => id !== centerId);
   const slots = Array(9).fill(null);
-  if (centerId) slots[4] = SONGS.find((s) => s.id === centerId) || null;
+  if (centerId) slots[4] = SELECTABLE_SONGS.find((s) => s.id === centerId) || null;
   outer.forEach((id, i) => {
-    if (i < slotOrder.length) slots[slotOrder[i]] = SONGS.find((s) => s.id === id) || null;
+    if (i < slotOrder.length) slots[slotOrder[i]] = SELECTABLE_SONGS.find((s) => s.id === id) || null;
   });
 
   const selectedCount = selectedIds.length;
@@ -330,10 +343,11 @@ export default function LaponeOshikyoku9Public() {
 
     const cellW = 380,
       cellH = Math.round((cellW * 9) / 16),
-      gap = 20,
+      gap = 0,
       pad = 40,
       headerH = 176,
-      footerH = 64;
+      footerH = 64,
+      outerRadius = 20;
     const canvas = document.createElement("canvas");
     canvas.width = pad * 2 + cellW * 3 + gap * 2;
     canvas.height = headerH + cellH * 3 + gap * 2 + footerH;
@@ -369,8 +383,15 @@ export default function LaponeOshikyoku9Public() {
       const song = slots[i];
       const isCenter = i === 4;
 
+      const cornerRadius = {
+        tl: row === 0 && col === 0 ? outerRadius : 0,
+        tr: row === 0 && col === 2 ? outerRadius : 0,
+        bl: row === 2 && col === 0 ? outerRadius : 0,
+        br: row === 2 && col === 2 ? outerRadius : 0,
+      };
+
       ctx.save();
-      roundRectPath(ctx, x, y, cellW, cellH, 18);
+      roundRectPath(ctx, x, y, cellW, cellH, cornerRadius);
       ctx.clip();
       if (song) {
         try {
@@ -406,35 +427,35 @@ export default function LaponeOshikyoku9Public() {
       }
       ctx.restore();
 
-      if (isCenter) {
-        for (let g2 = 3; g2 >= 1; g2--) {
-          ctx.save();
-          roundRectPath(ctx, x - g2 * 5, y - g2 * 5, cellW + g2 * 10, cellH + g2 * 10, 18 + g2 * 4);
-          ctx.strokeStyle = `rgba(255,122,41,${0.16 * g2})`;
-          ctx.lineWidth = 6;
-          ctx.stroke();
-          ctx.restore();
-        }
-        ctx.save();
-        roundRectPath(ctx, x, y, cellW, cellH, 18);
-        ctx.lineWidth = 8;
-        ctx.strokeStyle = "#FF7A29";
-        ctx.stroke();
-        ctx.restore();
+    }
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(x + 34, y + 34, 25, 0, Math.PI * 2);
-        ctx.fillStyle = "#FF7A29";
-        ctx.fill();
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 24px sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("★", x + 34, y + 36);
-        ctx.textBaseline = "alphabetic";
-        ctx.restore();
-      }
+    // センターのハイライトは全セルを描き終えた後に最前面へ描く
+    // (gapが0なので、ループ内で描くと後から描かれる隣のセルに隠れてしまう)
+    if (centerId) {
+      const ccx = pad + 1 * (cellW + gap);
+      const ccy = headerH + 1 * (cellH + gap);
+
+      ctx.save();
+      ctx.shadowColor = "rgba(255,122,41,0.85)";
+      ctx.shadowBlur = 26;
+      roundRectPath(ctx, ccx, ccy, cellW, cellH, 0);
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = "#FF7A29";
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(ccx + 34, ccy + 34, 25, 0, Math.PI * 2);
+      ctx.fillStyle = "#FF7A29";
+      ctx.fill();
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 24px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("★", ccx + 34, ccy + 36);
+      ctx.textBaseline = "alphabetic";
+      ctx.restore();
     }
 
     ctx.textAlign = "center";
