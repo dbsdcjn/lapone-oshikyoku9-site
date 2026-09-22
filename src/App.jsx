@@ -466,13 +466,13 @@ export default function LaponeOshikyoku9Public() {
         ctx.fillStyle = grad;
         ctx.fillRect(x, y + cellH - 84, cellW, 84);
 
-        ctx.textAlign = "left";
+        ctx.textAlign = "right";
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 21px 'Zen Maru Gothic', sans-serif";
-        ctx.fillText(truncateToWidth(ctx, song.title, cellW - 32), x + 16, y + cellH - 42);
+        ctx.fillText(truncateToWidth(ctx, song.title, cellW - 32), x + cellW - 16, y + cellH - 42);
         ctx.font = "500 15px 'Zen Maru Gothic', sans-serif";
         ctx.fillStyle = "#ffd7ae";
-        ctx.fillText(truncateToWidth(ctx, song.group, cellW - 32), x + 16, y + cellH - 16);
+        ctx.fillText(truncateToWidth(ctx, song.group, cellW - 32), x + cellW - 16, y + cellH - 16);
       } else {
         ctx.fillStyle = "#fdece0";
         ctx.fillRect(x, y, cellW, cellH);
@@ -603,9 +603,6 @@ export default function LaponeOshikyoku9Public() {
 
       <div className="max-w-5xl mx-auto pb-24 sm:pb-0">
         <header className="text-center mb-6">
-          <p style={{ color: "#d97a3a", letterSpacing: "0.25em", fontSize: 12, fontWeight: 500 }}>
-            LAPONE FAN MAKER
-          </p>
           <h1
             style={{
               fontFamily: FONT_STACK,
@@ -687,7 +684,7 @@ export default function LaponeOshikyoku9Public() {
                       />
                       <div
                         className="absolute bottom-0 left-0 right-0 p-1.5"
-                        style={{ background: "linear-gradient(to top, rgba(20,14,8,0.85), transparent)" }}
+                        style={{ background: "linear-gradient(to top, rgba(20,14,8,0.85), transparent)", textAlign: "right" }}
                       >
                         <p className="font-semibold truncate leading-tight" style={{ color: "#ffffff", fontSize: 11 }}>
                           {song.title}
@@ -718,7 +715,7 @@ export default function LaponeOshikyoku9Public() {
                       <button
                         onClick={(e) => openPreview(song, e)}
                         aria-label={`${song.title}のMVをプレビュー再生`}
-                        className="absolute bottom-1.5 right-1.5 rounded-full w-6 h-6 flex items-center justify-center"
+                        className="absolute bottom-1.5 left-1.5 rounded-full w-6 h-6 flex items-center justify-center"
                         style={{ background: "rgba(20,14,8,0.55)", color: "#ffffff" }}
                         title="プレビュー再生"
                       >
@@ -780,7 +777,7 @@ export default function LaponeOshikyoku9Public() {
                           />
                           <div
                             className="absolute bottom-0 left-0 right-0 p-1.5 sm:p-2"
-                            style={{ background: "linear-gradient(to top, rgba(20,14,8,0.85), transparent)" }}
+                            style={{ background: "linear-gradient(to top, rgba(20,14,8,0.85), transparent)", textAlign: "right" }}
                           >
                             <p className="font-semibold truncate leading-tight" style={{ color: "#ffffff", fontSize: 11 }}>
                               {song.title}
