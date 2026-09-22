@@ -512,6 +512,30 @@ export default function LaponeOshikyoku9Public() {
     }
   }
 
+  async function handleDownload() {
+    if (!canExport || exporting) return;
+    setExporting(true);
+    try {
+      const canvas = await buildCanvas(showCaptions);
+      const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
+      if (!blob) {
+        showToast("画像の書き出しに失敗したよ。スクリーンショットで保存してね");
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "lapone_oshikyoku9.png";
+      a.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 2000);
+      showToast("画像をダウンロードしたよ！");
+    } catch (e) {
+      showToast("画像の書き出しに失敗したよ。スクリーンショットで保存してね");
+    } finally {
+      setExporting(false);
+    }
+  }
+
   const canShareFiles = typeof navigator !== "undefined" && !!navigator.share;
 
   const progressLabel =
@@ -769,19 +793,38 @@ export default function LaponeOshikyoku9Public() {
                   />
                   <span style={{ color: "#a3907f", fontSize: 12 }}>曲名・グループ名を入れる</span>
                 </label>
-                <button
-                  onClick={handleSaveOrShare}
-                  disabled={!canExport || exporting}
-                  className="w-full font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
-                  style={{
-                    background: canExport ? "#FF7A29" : "#f5e9de",
-                    color: canExport ? "#ffffff" : "#c9b6a6",
-                    cursor: canExport ? "pointer" : "not-allowed",
-                  }}
-                >
-                  {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
-                  {exporting ? "書き出し中..." : canShareFiles ? "シェアする" : "画像を保存"}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleSaveOrShare}
+                    disabled={!canExport || exporting}
+                    className="flex-1 font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
+                    style={{
+                      background: canExport ? "#FF7A29" : "#f5e9de",
+                      color: canExport ? "#ffffff" : "#c9b6a6",
+                      cursor: canExport ? "pointer" : "not-allowed",
+                    }}
+                  >
+                    {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
+                    {exporting ? "書き出し中..." : canShareFiles ? "シェアする" : "画像を保存"}
+                  </button>
+                  {canShareFiles && (
+                    <button
+                      onClick={handleDownload}
+                      disabled={!canExport || exporting}
+                      aria-label="画像をダウンロード"
+                      title="画像をダウンロード"
+                      className="rounded-lg px-3.5 flex items-center justify-center"
+                      style={{
+                        background: canExport ? "#fff3ea" : "#f5e9de",
+                        color: canExport ? "#FF7A29" : "#c9b6a6",
+                        border: `1px solid ${canExport ? "#FF7A29" : "#f5e9de"}`,
+                        cursor: canExport ? "pointer" : "not-allowed",
+                      }}
+                    >
+                      <Download size={16} />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
