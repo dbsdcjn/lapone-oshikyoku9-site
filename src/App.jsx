@@ -214,7 +214,7 @@ const STORAGE_KEY = "lapone-oshikyoku9:selection";
 
 // 集計送信先（Google Apps Script Webアプリの/execURL）。
 // 未設定の間は何も送信しない。
-const RANKING_LOG_URL = "";
+const RANKING_LOG_URL = "https://script.google.com/macros/s/AKfycbzYYRhBDnc_envWEvkB7kk6njgQ4Xm0DvrV0fl_OvDcrda9AQnM2YH0nwLXSLB7xtQZ/exec";
 
 function loadImage(src, crossOrigin) {
   return new Promise((resolve, reject) => {
