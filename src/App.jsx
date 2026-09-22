@@ -427,7 +427,7 @@ export default function LaponeOshikyoku9Public() {
     const cellW = 380,
       cellH = Math.round((cellW * 9) / 16),
       gap = 0,
-      outerRadius = 20;
+      outerRadius = 0;
     const canvas = document.createElement("canvas");
     canvas.width = cellW * 3 + gap * 2;
     canvas.height = cellH * 3 + gap * 2;
@@ -523,7 +523,7 @@ export default function LaponeOshikyoku9Public() {
       const centerTitle = centerSong ? centerSong.title.split("(")[0].trim() : "";
       const centerLabel = centerSong ? `${centerSong.group}の${centerTitle}` : "";
       const siteUrl = `${window.location.origin}${window.location.pathname}`;
-      const shareText = `私の好き曲No.1は${centerLabel}でした！\n${siteUrl}\n#LAPONE好き曲9選`;
+      const shareText = `私の好き曲No.1は${centerLabel}でした！\n${siteUrl}\n\n#LAPONE好き曲9選`;
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({ files: [file], title: "推し曲9選", text: shareText });
@@ -822,6 +822,19 @@ export default function LaponeOshikyoku9Public() {
                           >
                             {rank}
                           </div>
+                          <button
+                            type="button"
+                            onPointerDown={(e) => e.stopPropagation()}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleSelect(song.id);
+                            }}
+                            aria-label={`${song.title}の選択を解除`}
+                            className="absolute top-1.5 right-1.5 rounded-full w-6 h-6 flex items-center justify-center"
+                            style={{ background: "rgba(20,14,8,0.55)", color: "#ffffff" }}
+                          >
+                            <X size={14} />
+                          </button>
                         </>
                       ) : (
                         <div
