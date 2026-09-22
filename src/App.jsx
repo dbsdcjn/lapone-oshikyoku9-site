@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Download, RefreshCw, Play, X } from "lucide-react";
+import { Download, RefreshCw, Play, X, Share2 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // 曲データはここに書く（公開前に手元の準備ツールで取得した結果を貼ってね）
