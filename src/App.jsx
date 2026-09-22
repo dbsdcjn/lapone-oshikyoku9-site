@@ -675,6 +675,7 @@ export default function LaponeOshikyoku9Public() {
                       className="lo9-thumb relative rounded-xl overflow-hidden cursor-pointer"
                       style={{
                         paddingBottom: "56.25%",
+                        background: "#ffe4d1",
                         border: isSelected ? "2px solid #FF7A29" : "1px solid #ffe4d1",
                       }}
                     >
@@ -778,6 +779,7 @@ export default function LaponeOshikyoku9Public() {
                       className="lo9-slot relative rounded-xl overflow-hidden"
                       style={{
                         paddingBottom: "56.25%",
+                        background: "#ffe4d1",
                         border: isOver
                           ? "3px dashed #FF7A29"
                           : isCenter
