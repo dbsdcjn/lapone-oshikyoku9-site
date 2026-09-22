@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Star, Download, RefreshCw, Check, Share2, Play, X, Link2 } from "lucide-react";
+import { Star, Download, RefreshCw, Check, Share2, Play, X } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // 曲データはここに書く（公開前に手元の準備ツールで取得した結果を貼ってね）
@@ -242,24 +242,10 @@ function roundRectPath(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-function truncateToWidth(ctx, text, maxWidth) {
-  let t = text;
-  if (ctx.measureText(t).width <= maxWidth) return t;
-  while (t.length > 1 && ctx.measureText(t + "…").width > maxWidth) t = t.slice(0, -1);
-  return t + "…";
-}
-
 const GROUP_ORDER = ["JO1", "INI", "DXTEEN", "KO1KEYZ", "ME:I", "IS:SUE"];
 
 // 選べるのは公式MV/PVのみ。Performance Ver.やLive映像はデータとして残しつつピッカーからは除外。
 const SELECTABLE_SONGS = SONGS.filter((s) => s.type !== "LIVE");
-
-function encodeShareQuery(selectedIds, centerId) {
-  const params = new URLSearchParams();
-  params.set("set", selectedIds.join(","));
-  if (centerId) params.set("center", centerId);
-  return params.toString();
-}
 
 function readShareFromLocation() {
   try {
@@ -394,27 +380,13 @@ export default function LaponeOshikyoku9Public() {
   const canExport = selectedCount === 9 && !!centerId;
 
   async function buildCanvas() {
-    try {
-      await Promise.all([
-        document.fonts.load("900 46px 'Zen Maru Gothic'"),
-        document.fonts.load("500 20px 'Zen Maru Gothic'"),
-        document.fonts.load("bold 21px 'Zen Maru Gothic'"),
-        document.fonts.load("500 15px 'Zen Maru Gothic'"),
-      ]);
-    } catch (e) {
-      // フォント読み込みに失敗してもフォールバックフォントで書き出しを続ける
-    }
-
     const cellW = 380,
       cellH = Math.round((cellW * 9) / 16),
       gap = 0,
-      pad = 40,
-      headerH = 176,
-      footerH = 64,
       outerRadius = 20;
     const canvas = document.createElement("canvas");
-    canvas.width = pad * 2 + cellW * 3 + gap * 2;
-    canvas.height = headerH + cellH * 3 + gap * 2 + footerH;
+    canvas.width = cellW * 3 + gap * 2;
+    canvas.height = cellH * 3 + gap * 2;
     const ctx = canvas.getContext("2d");
 
     const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
@@ -423,29 +395,12 @@ export default function LaponeOshikyoku9Public() {
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const cx = canvas.width / 2;
-    const cy = headerH + (cellH * 3 + gap * 2) / 2;
-    const glow = ctx.createRadialGradient(cx, cy, 40, cx, cy, 560);
-    glow.addColorStop(0, "rgba(255,122,41,0.16)");
-    glow.addColorStop(1, "rgba(255,122,41,0)");
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#2b2420";
-    ctx.font = "900 46px 'Zen Maru Gothic', sans-serif";
-    ctx.fillText("LAPONE 推し曲9選", cx, 78);
-    ctx.font = "500 20px 'Zen Maru Gothic', sans-serif";
-    ctx.fillStyle = "#d97a3a";
-    ctx.fillText("MY BEST 9 SETLIST", cx, 112);
-
     for (let i = 0; i < 9; i++) {
       const row = Math.floor(i / 3);
       const col = i % 3;
-      const x = pad + col * (cellW + gap);
-      const y = headerH + row * (cellH + gap);
+      const x = col * (cellW + gap);
+      const y = row * (cellH + gap);
       const song = slots[i];
-      const isCenter = i === 4;
 
       const cornerRadius = {
         tl: row === 0 && col === 0 ? outerRadius : 0,
@@ -468,36 +423,18 @@ export default function LaponeOshikyoku9Public() {
           ctx.fillStyle = "#ffddb0";
           ctx.fillRect(x, y, cellW, cellH);
         }
-        const grad = ctx.createLinearGradient(0, y + cellH - 84, 0, y + cellH);
-        grad.addColorStop(0, "rgba(20,14,8,0)");
-        grad.addColorStop(1, "rgba(20,14,8,0.82)");
-        ctx.fillStyle = grad;
-        ctx.fillRect(x, y + cellH - 84, cellW, 84);
-
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#ffffff";
-        ctx.font = "bold 21px 'Zen Maru Gothic', sans-serif";
-        ctx.fillText(truncateToWidth(ctx, song.title, cellW - 32), x + cellW - 16, y + cellH - 42);
-        ctx.font = "500 15px 'Zen Maru Gothic', sans-serif";
-        ctx.fillStyle = "#ffd7ae";
-        ctx.fillText(truncateToWidth(ctx, song.group, cellW - 32), x + cellW - 16, y + cellH - 16);
       } else {
         ctx.fillStyle = "#fdece0";
         ctx.fillRect(x, y, cellW, cellH);
-        ctx.fillStyle = "#e3b088";
-        ctx.font = "500 20px 'Zen Maru Gothic', sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText(isCenter ? "センター" : "空席", x + cellW / 2, y + cellH / 2);
       }
       ctx.restore();
-
     }
 
-    // センターのハイライトは全セルを描き終えた後に最前面へ描く
+    // センターのオレンジ枠は全セルを描き終えた後に最前面へ描く
     // (gapが0なので、ループ内で描くと後から描かれる隣のセルに隠れてしまう)
     if (centerId) {
-      const ccx = pad + 1 * (cellW + gap);
-      const ccy = headerH + 1 * (cellH + gap);
+      const ccx = 1 * (cellW + gap);
+      const ccy = 1 * (cellH + gap);
 
       ctx.save();
       ctx.shadowColor = "rgba(255,122,41,0.85)";
@@ -507,25 +444,7 @@ export default function LaponeOshikyoku9Public() {
       ctx.strokeStyle = "#FF7A29";
       ctx.stroke();
       ctx.restore();
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(ccx + 34, ccy + 34, 25, 0, Math.PI * 2);
-      ctx.fillStyle = "#FF7A29";
-      ctx.fill();
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 24px sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("★", ccx + 34, ccy + 36);
-      ctx.textBaseline = "alphabetic";
-      ctx.restore();
     }
-
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#c99a76";
-    ctx.font = "500 15px 'Zen Maru Gothic', sans-serif";
-    ctx.fillText("推し曲9選メーカー", cx, canvas.height - 26);
 
     return canvas;
   }
@@ -559,18 +478,6 @@ export default function LaponeOshikyoku9Public() {
       showToast("画像の書き出しに失敗したよ。スクリーンショットで保存してね");
     } finally {
       setExporting(false);
-    }
-  }
-
-  async function copyShareLink() {
-    if (!canExport) return;
-    const query = encodeShareQuery(selectedIds, centerId);
-    const url = `${window.location.origin}${window.location.pathname}?${query}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      showToast("シェアリンクをコピーしたよ！");
-    } catch (e) {
-      window.prompt("このリンクをコピーしてね", url);
     }
   }
 
@@ -878,21 +785,6 @@ export default function LaponeOshikyoku9Public() {
                     }}
                   >
                     <XLogoIcon size={16} />
-                  </button>
-                  <button
-                    onClick={copyShareLink}
-                    disabled={!canExport}
-                    aria-label="この組み合わせの共有リンクをコピー"
-                    title="共有リンクをコピー"
-                    className="rounded-lg px-3.5 flex items-center justify-center"
-                    style={{
-                      background: canExport ? "#fff3ea" : "#f5e9de",
-                      color: canExport ? "#FF7A29" : "#c9b6a6",
-                      border: `1px solid ${canExport ? "#FF7A29" : "#f5e9de"}`,
-                      cursor: canExport ? "pointer" : "not-allowed",
-                    }}
-                  >
-                    <Link2 size={16} />
                   </button>
                 </div>
               </div>
