@@ -563,7 +563,7 @@ export default function LaponeOshikyoku9Public() {
       const shareText = `私の好き曲No.1は${centerLabel}でした！\n${siteUrl}\n\n#LAPONE好き曲9選`;
       if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
-          await navigator.share({ files: [file], title: "推し曲9選", text: shareText });
+          await navigator.share({ files: [file], title: "好き曲9選", text: shareText });
           return;
         } catch (e) {
           // シェアがキャンセルされた場合はダウンロードにフォールバック
@@ -651,7 +651,7 @@ export default function LaponeOshikyoku9Public() {
               color: "#231d18",
             }}
           >
-            推し曲9選
+            好き曲9選
           </h1>
           <p style={{ color: "#8a7a6d", fontSize: 14 }}>
             好きなMV、PVを9つ選んで、いちばん好きな1曲をセンターに立たせよう
