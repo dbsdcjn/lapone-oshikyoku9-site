@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Download, RefreshCw, Play, X, Share2 } from "lucide-react";
+import { Download, RefreshCw, Play, X, Share2, PartyPopper } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // 曲データはここに書く（公開前に手元の準備ツールで取得した結果を貼ってね）
@@ -366,6 +366,9 @@ export default function LaponeOshikyoku9Public() {
   const [dragPos, setDragPos] = useState(null);
   const [overPos, setOverPos] = useState(null);
   const [loggedKey, setLoggedKey] = useState("");
+  const [completed, setCompleted] = useState(false);
+  const [completePreviewUrl, setCompletePreviewUrl] = useState("");
+  const [buildingComplete, setBuildingComplete] = useState(false);
 
   // 選んだ組み合わせを端末に自動保存。次に開いたときも続きから選べる。
   useEffect(() => {
@@ -385,6 +388,16 @@ export default function LaponeOshikyoku9Public() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [previewSong]);
+
+  // 完成画面もEscキーで閉じられるように
+  useEffect(() => {
+    if (!completed) return;
+    function onKeyDown(e) {
+      if (e.key === "Escape") setCompleted(false);
+    }
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [completed]);
 
   function showToast(msg) {
     setToast(msg);
@@ -439,15 +452,18 @@ export default function LaponeOshikyoku9Public() {
   const selectedCount = rankedIds.length;
   const canExport = selectedCount === 9;
 
-  // 9曲そろって書き出した組み合わせは、集計のため一度だけ裏で記録する
-  useEffect(() => {
+  const centerSong = SELECTABLE_SONGS.find((s) => s.id === rankedIds[0]);
+  const centerLabel = centerSong ? `${centerSong.group}の${centerSong.title.split("(")[0].trim()}` : "";
+
+  // 完成・シェア・保存のどれかを実際に行ったタイミングで、集計のため一度だけ裏で記録する
+  // （9曲そろっただけでは送らず、ユーザーのアクションを起点にする）
+  function logIfNeeded() {
     if (!canExport) return;
     const key = rankedIds.join(",");
     if (key === loggedKey) return;
     setLoggedKey(key);
     logRanking(rankedIds);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [canExport, rankedIds]);
+  }
 
   async function buildCanvas(withCaptions) {
     if (withCaptions) {
@@ -547,6 +563,7 @@ export default function LaponeOshikyoku9Public() {
 
   async function handleSaveOrShare() {
     if (!canExport || exporting) return;
+    logIfNeeded();
     setExporting(true);
     try {
       const canvas = await buildCanvas(showCaptions);
@@ -584,6 +601,7 @@ export default function LaponeOshikyoku9Public() {
 
   async function handleDownload() {
     if (!canExport || exporting) return;
+    logIfNeeded();
     setExporting(true);
     try {
       const canvas = await buildCanvas(showCaptions);
@@ -603,6 +621,22 @@ export default function LaponeOshikyoku9Public() {
       showToast("画像の書き出しに失敗したよ。スクリーンショットで保存してね");
     } finally {
       setExporting(false);
+    }
+  }
+
+  async function handleComplete() {
+    if (!canExport) return;
+    logIfNeeded();
+    setCompleted(true);
+    setBuildingComplete(true);
+    setCompletePreviewUrl("");
+    try {
+      const canvas = await buildCanvas(showCaptions);
+      setCompletePreviewUrl(canvas.toDataURL("image/png"));
+    } catch (e) {
+      // プレビュー画像の生成に失敗しても完成画面自体は表示する
+    } finally {
+      setBuildingComplete(false);
     }
   }
 
@@ -890,6 +924,21 @@ export default function LaponeOshikyoku9Public() {
                 <p style={{ color: "#a3907f", fontSize: 12 }} className="text-center" aria-live="polite">
                   {progressLabel}
                 </p>
+                {canExport && (
+                  <button
+                    onClick={handleComplete}
+                    disabled={buildingComplete}
+                    className="w-full font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
+                    style={{
+                      background: "#FF7A29",
+                      color: "#ffffff",
+                      cursor: buildingComplete ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    <PartyPopper size={16} />
+                    完成にする
+                  </button>
+                )}
                 <label className="flex items-center justify-center gap-2 cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -947,16 +996,24 @@ export default function LaponeOshikyoku9Public() {
             {progressLabel}
           </p>
           <button
-            onClick={handleSaveOrShare}
+            onClick={canExport ? handleComplete : handleSaveOrShare}
             disabled={!canExport || exporting}
-            aria-label={canShareFiles ? "シェアする" : "画像を保存"}
+            aria-label={canExport ? "完成にする" : canShareFiles ? "シェアする" : "画像を保存"}
             className="font-bold rounded-lg py-2 px-4 text-sm flex items-center justify-center gap-2 shrink-0"
             style={{
               background: canExport ? "#FF7A29" : "#f5e9de",
               color: canExport ? "#ffffff" : "#c9b6a6",
             }}
           >
-            {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
+            {canExport ? (
+              <>
+                <PartyPopper size={16} /> 完成にする
+              </>
+            ) : canShareFiles ? (
+              <Share2 size={16} />
+            ) : (
+              <Download size={16} />
+            )}
           </button>
         </div>
       )}
@@ -1001,6 +1058,96 @@ export default function LaponeOshikyoku9Public() {
                 allowFullScreen
               />
             </div>
+          </div>
+        </div>
+      )}
+
+      {completed && (
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4"
+          style={{ background: "rgba(20,14,8,0.82)", zIndex: 50 }}
+          onClick={() => setCompleted(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl p-6 text-center relative"
+            style={{ background: "#fffaf6", maxHeight: "92vh", overflowY: "auto" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setCompleted(false)}
+              aria-label="完成画面を閉じる"
+              className="absolute top-4 right-4"
+              style={{ color: "#a3907f" }}
+            >
+              <X size={20} />
+            </button>
+
+            <div className="flex items-center justify-center gap-1.5" style={{ color: "#FF7A29" }}>
+              <PartyPopper size={20} />
+              <p style={{ fontWeight: 900, fontSize: 13, letterSpacing: 1 }}>完成！</p>
+            </div>
+            <h2 className="font-bold" style={{ fontSize: 20, marginTop: 6 }}>
+              好き曲9選、できたよ
+            </h2>
+            {centerLabel && (
+              <p style={{ color: "#a3907f", fontSize: 12, marginTop: 4 }}>センターは{centerLabel}！</p>
+            )}
+
+            <div
+              className="mt-4 rounded-xl overflow-hidden"
+              style={{ border: "1px solid #ffe4d1", background: "#ffe4d1" }}
+            >
+              {buildingComplete || !completePreviewUrl ? (
+                <div
+                  className="relative flex items-center justify-center"
+                  style={{ paddingBottom: "52.5%" }}
+                >
+                  <span style={{ position: "absolute", color: "#c98a4b", fontSize: 12 }}>画像を作成中...</span>
+                </div>
+              ) : (
+                <img src={completePreviewUrl} alt="完成した好き曲9選" className="w-full block" />
+              )}
+            </div>
+
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={handleSaveOrShare}
+                disabled={exporting}
+                className="flex-1 font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
+                style={{ background: "#FF7A29", color: "#ffffff", cursor: exporting ? "not-allowed" : "pointer" }}
+              >
+                {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
+                {exporting ? "書き出し中..." : canShareFiles ? "シェアする" : "画像を保存"}
+              </button>
+              {canShareFiles && (
+                <button
+                  onClick={handleDownload}
+                  disabled={exporting}
+                  aria-label="画像をダウンロード"
+                  title="画像をダウンロード"
+                  className="rounded-lg px-3.5 flex items-center justify-center"
+                  style={{
+                    background: "#fff3ea",
+                    color: "#FF7A29",
+                    border: "1px solid #FF7A29",
+                    cursor: exporting ? "not-allowed" : "pointer",
+                  }}
+                >
+                  <Download size={16} />
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={() => {
+                setCompleted(false);
+                resetSelection();
+              }}
+              className="mt-3 text-xs flex items-center gap-1 justify-center w-full"
+              style={{ color: "#a3907f" }}
+            >
+              <RefreshCw size={12} /> 選び直す
+            </button>
           </div>
         </div>
       )}
