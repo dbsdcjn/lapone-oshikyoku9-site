@@ -258,6 +258,43 @@ const GROUP_ORDER = ["JO1", "INI", "DXTEEN", "KO1KEYZ", "ME:I", "IS:SUE"];
 // 選べるのは公式MV/PVのみ。Performance Ver.やLive映像はデータとして残しつつピッカーからは除外。
 const SELECTABLE_SONGS = SONGS.filter((s) => s.type !== "LIVE");
 
+// 表示順: グループ別にまとめたうえで、同じ曲のMVとPerformance Videoが隣り合うように並べる。
+function pvBaseTitle(title) {
+  return title.replace(/\s*\(Performance Video\)\s*$/, "").trim();
+}
+function buildOrderedSongs(songs) {
+  const byGroup = new Map();
+  for (const s of songs) {
+    if (!byGroup.has(s.group)) byGroup.set(s.group, []);
+    byGroup.get(s.group).push(s);
+  }
+  const groups = [...GROUP_ORDER, ...[...byGroup.keys()].filter((g) => !GROUP_ORDER.includes(g))];
+  const ordered = [];
+  for (const g of groups) {
+    const list = byGroup.get(g);
+    if (!list) continue;
+    const mvs = list.filter((s) => s.type === "MV");
+    const pvs = list.filter((s) => s.type === "PV");
+    const usedPvIds = new Set();
+    for (const mv of mvs) {
+      ordered.push(mv);
+      const key = pvBaseTitle(mv.title);
+      for (const pv of pvs) {
+        if (usedPvIds.has(pv.id)) continue;
+        if (pvBaseTitle(pv.title) === key) {
+          ordered.push(pv);
+          usedPvIds.add(pv.id);
+        }
+      }
+    }
+    for (const pv of pvs) {
+      if (!usedPvIds.has(pv.id)) ordered.push(pv);
+    }
+  }
+  return ordered;
+}
+const ORDERED_SELECTABLE_SONGS = buildOrderedSongs(SELECTABLE_SONGS);
+
 // 3x3のビジュアル配置(0〜8, 中央=4が1位/センター)と、
 // 順位配列(rankedIds、0番目が1位)のどのインデックスに対応するかのマッピング。
 const SLOT_ORDER = [0, 1, 2, 3, 5, 6, 7, 8];
@@ -357,8 +394,8 @@ export default function LaponeOshikyoku9Public() {
 
   const visibleSongs =
     activeGroup === "すべて"
-      ? [...SELECTABLE_SONGS].sort((a, b) => GROUP_ORDER.indexOf(a.group) - GROUP_ORDER.indexOf(b.group))
-      : SELECTABLE_SONGS.filter((s) => s.group === activeGroup);
+      ? ORDERED_SELECTABLE_SONGS
+      : ORDERED_SELECTABLE_SONGS.filter((s) => s.group === activeGroup);
 
   function toggleSelect(id) {
     setRankedIds((prev) => {
@@ -617,7 +654,7 @@ export default function LaponeOshikyoku9Public() {
             推し曲9選
           </h1>
           <p style={{ color: "#8a7a6d", fontSize: 14 }}>
-            好きなMVを9つ選んで、いちばん好きな1曲をセンターに立たせよう
+            好きなMV、PVを9つ選んで、いちばん好きな1曲をセンターに立たせよう
           </p>
         </header>
 
