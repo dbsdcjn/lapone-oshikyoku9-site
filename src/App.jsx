@@ -645,9 +645,7 @@ export default function LaponeOshikyoku9Public() {
   const progressLabel =
     selectedCount < 9
       ? `あと${9 - selectedCount}曲えらんでね`
-      : canShareFiles
-      ? "準備OK。シェアできるよ（ドラッグで順位を入れ替えられるよ）"
-      : "準備OK。画像を保存できるよ（ドラッグで順位を入れ替えられるよ）";
+      : "準備OK！「完成にする」を押してね（ドラッグで順位を入れ替えられるよ）";
 
   return (
     <div
@@ -924,21 +922,6 @@ export default function LaponeOshikyoku9Public() {
                 <p style={{ color: "#a3907f", fontSize: 12 }} className="text-center" aria-live="polite">
                   {progressLabel}
                 </p>
-                {canExport && (
-                  <button
-                    onClick={handleComplete}
-                    disabled={buildingComplete}
-                    className="w-full font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
-                    style={{
-                      background: "#FF7A29",
-                      color: "#ffffff",
-                      cursor: buildingComplete ? "not-allowed" : "pointer",
-                    }}
-                  >
-                    <PartyPopper size={16} />
-                    完成にする
-                  </button>
-                )}
                 <label className="flex items-center justify-center gap-2 cursor-pointer select-none">
                   <input
                     type="checkbox"
@@ -948,38 +931,19 @@ export default function LaponeOshikyoku9Public() {
                   />
                   <span style={{ color: "#a3907f", fontSize: 12 }}>曲名・グループ名を入れる</span>
                 </label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleSaveOrShare}
-                    disabled={!canExport || exporting}
-                    className="flex-1 font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
-                    style={{
-                      background: canExport ? "#FF7A29" : "#f5e9de",
-                      color: canExport ? "#ffffff" : "#c9b6a6",
-                      cursor: canExport ? "pointer" : "not-allowed",
-                    }}
-                  >
-                    {canShareFiles ? <Share2 size={16} /> : <Download size={16} />}
-                    {exporting ? "書き出し中..." : canShareFiles ? "シェアする" : "画像を保存"}
-                  </button>
-                  {canShareFiles && (
-                    <button
-                      onClick={handleDownload}
-                      disabled={!canExport || exporting}
-                      aria-label="画像をダウンロード"
-                      title="画像をダウンロード"
-                      className="rounded-lg px-3.5 flex items-center justify-center"
-                      style={{
-                        background: canExport ? "#fff3ea" : "#f5e9de",
-                        color: canExport ? "#FF7A29" : "#c9b6a6",
-                        border: `1px solid ${canExport ? "#FF7A29" : "#f5e9de"}`,
-                        cursor: canExport ? "pointer" : "not-allowed",
-                      }}
-                    >
-                      <Download size={16} />
-                    </button>
-                  )}
-                </div>
+                <button
+                  onClick={handleComplete}
+                  disabled={!canExport || buildingComplete}
+                  className="w-full font-bold rounded-lg py-2.5 text-sm flex items-center justify-center gap-2"
+                  style={{
+                    background: canExport ? "#FF7A29" : "#f5e9de",
+                    color: canExport ? "#ffffff" : "#c9b6a6",
+                    cursor: canExport && !buildingComplete ? "pointer" : "not-allowed",
+                  }}
+                >
+                  <PartyPopper size={16} />
+                  完成にする
+                </button>
               </div>
             </div>
           </div>
@@ -996,24 +960,16 @@ export default function LaponeOshikyoku9Public() {
             {progressLabel}
           </p>
           <button
-            onClick={canExport ? handleComplete : handleSaveOrShare}
-            disabled={!canExport || exporting}
-            aria-label={canExport ? "完成にする" : canShareFiles ? "シェアする" : "画像を保存"}
+            onClick={handleComplete}
+            disabled={!canExport}
+            aria-label="完成にする"
             className="font-bold rounded-lg py-2 px-4 text-sm flex items-center justify-center gap-2 shrink-0"
             style={{
               background: canExport ? "#FF7A29" : "#f5e9de",
               color: canExport ? "#ffffff" : "#c9b6a6",
             }}
           >
-            {canExport ? (
-              <>
-                <PartyPopper size={16} /> 完成にする
-              </>
-            ) : canShareFiles ? (
-              <Share2 size={16} />
-            ) : (
-              <Download size={16} />
-            )}
+            <PartyPopper size={16} /> 完成にする
           </button>
         </div>
       )}
@@ -1075,11 +1031,12 @@ export default function LaponeOshikyoku9Public() {
           >
             <button
               onClick={() => setCompleted(false)}
-              aria-label="完成画面を閉じる"
-              className="absolute top-4 right-4"
-              style={{ color: "#a3907f" }}
+              aria-label="戻る"
+              className="absolute top-4 right-4 flex items-center gap-1 rounded-full px-2.5 py-1"
+              style={{ color: "#a3907f", background: "#fff3ea" }}
             >
-              <X size={20} />
+              <X size={14} />
+              <span style={{ fontSize: 11 }}>戻る</span>
             </button>
 
             <div className="flex items-center justify-center gap-1.5" style={{ color: "#FF7A29" }}>
