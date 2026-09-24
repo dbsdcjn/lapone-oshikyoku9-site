@@ -205,6 +205,7 @@ const SONGS = [
   { id: "s193", type: "PV", title: "ハルコイ (Performance Video)", group: "DXTEEN", videoId: "A-k-10vrp2Y" },
   { id: "s194", type: "PV", title: "IDOL", group: "DXTEEN", videoId: "KcrL7GdaScE" },
   { id: "s195", type: "PV", title: "1NA RIDE (Performance Video)", group: "INI", videoId: "MsZq5l3Bm-8" },
+  { id: "s196", type: "PV", title: "You Know What To Do (Performance Video)", group: "INI", videoId: "K81gjjpZxkM" },
   // ここに続きを追加していく（KO1KEYZ も同じ形式でOK）
 ];
 
